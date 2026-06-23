@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 import Shell from '../components/Shell';
 import styles from '../styles/Register.module.css';
 
@@ -15,6 +16,8 @@ const MEALS = ['Breakfast','Lunch','Dinner'];
 const COMPONENTS = ['U.S. Army','U.S. Navy','U.S. Marines','ROK Army','KATUSA','Civilian'];
 
 export default function Register() {
+  const router = useRouter();
+  const kiosk = 'kiosk' in router.query;
   const [step, setStep] = useState('form'); // form | success | error
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
@@ -91,7 +94,7 @@ export default function Register() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
 
-      <Shell active="register">
+      <Shell active="register" kiosk={kiosk}>
         {step === 'form' && (
           <>
             <section className={styles.hero}>

@@ -16,7 +16,7 @@ const NAV = [
   { id: 'settings', label: 'Settings', icon: '⚙', href: '/admin' },
 ];
 
-export default function Shell({ active, actions, children }) {
+export default function Shell({ active, actions, children, kiosk }) {
   const router = useRouter();
   return (
     <div className={s.shell}>
@@ -38,22 +38,24 @@ export default function Shell({ active, actions, children }) {
         </div>
       </header>
 
-      <div className={s.layout}>
-        <nav className={s.sidebar}>
-          {NAV.map((n, i) =>
-            n.section ? (
-              <div key={i} className={s.navSection}>{n.section}</div>
-            ) : (
-              <button
-                key={i}
-                className={`${s.navItem} ${active === n.id ? s.navActive : ''}`}
-                onClick={() => router.push(n.href)}
-              >
-                <span className={s.navDot}>{n.icon}</span> {n.label}
-              </button>
-            )
-          )}
-        </nav>
+      <div className={`${s.layout} ${kiosk ? s.layoutKiosk : ''}`}>
+        {!kiosk && (
+          <nav className={s.sidebar}>
+            {NAV.map((n, i) =>
+              n.section ? (
+                <div key={i} className={s.navSection}>{n.section}</div>
+              ) : (
+                <button
+                  key={i}
+                  className={`${s.navItem} ${active === n.id ? s.navActive : ''}`}
+                  onClick={() => router.push(n.href)}
+                >
+                  <span className={s.navDot}>{n.icon}</span> {n.label}
+                </button>
+              )
+            )}
+          </nav>
+        )}
         <main className={s.main}>{children}</main>
       </div>
     </div>

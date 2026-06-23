@@ -24,6 +24,7 @@
 
 /* ---- Body = sidebar + main ---- */
 .layout { display: grid; grid-template-columns: 232px 1fr; flex: 1; }
+.layoutKiosk { grid-template-columns: 1fr; }
 @media (max-width: 900px) { .layout { grid-template-columns: 1fr; } }
 
 .sidebar { border-right: 1px solid var(--line); padding: 26px 0; position: sticky; top: 57px; height: calc(100vh - 57px); overflow-y: auto; }

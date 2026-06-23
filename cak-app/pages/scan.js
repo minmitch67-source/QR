@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 import Shell from '../components/Shell';
 import Hero from '../components/Hero';
 import styles from '../styles/Scanner.module.css';
@@ -7,6 +8,8 @@ import styles from '../styles/Scanner.module.css';
 const MEAL_PERIODS = ['Breakfast', 'Lunch', 'Dinner'];
 
 export default function Scanner() {
+  const router = useRouter();
+  const kiosk = 'kiosk' in router.query;
   const [mealPeriod, setMealPeriod] = useState('');
   const [scanState, setScanState] = useState('idle'); // idle | scanning | hardwareReady | processing | success | error | duplicate | notapproved
   const [mode, setMode] = useState('camera'); // camera | hardware
@@ -154,7 +157,7 @@ export default function Scanner() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
 
-      <Shell active="scanner">
+      <Shell active="scanner" kiosk={kiosk}>
         {(scanState === 'idle' || scanState === 'hardwareReady') && (
           <Hero
             short

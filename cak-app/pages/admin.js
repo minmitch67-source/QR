@@ -89,6 +89,18 @@ export default function Admin() {
     setTimeout(() => setCopied(''), 2000);
   };
 
+  const demo = async (action) => {
+    if (action === 'clear' && !confirm('Remove ALL demo data?')) return;
+    setActionLoading(l => ({ ...l, demo: true }));
+    await fetch('/api/demo', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ pin: storedPin, action }),
+    });
+    setActionLoading(l => ({ ...l, demo: false }));
+    fetchData();
+  };
+
   const exportCSV = async (type) => {
     const res = await fetch('/api/export', {
       method: 'POST',
@@ -158,7 +170,7 @@ export default function Admin() {
 
         {/* Tab nav */}
         <nav className={styles.tabs}>
-          {['pending','approved','denied','scans','report'].map(t => (
+          {['pending','approved','denied','scans','report','demo'].map(t => (
             <button key={t} className={`${styles.tab} ${tab === t ? styles.tabActive : ''}`} onClick={() => setTab(t)}>
               {t === 'pending' ? `Pending (${counts.pending ?? 0})` : t.charAt(0).toUpperCase() + t.slice(1)}
             </button>
@@ -295,6 +307,32 @@ export default function Admin() {
                   </div>
                 </>
               )}
+            </div>
+          )}
+
+          {/* DEMO */}
+          {tab === 'demo' && (
+            <div>
+              <div className={styles.sectionHdr}>
+                <h2 className={styles.sectionH2}>Demo Mode</h2>
+                <span className={styles.sectionNote}>For presentations — safe to load &amp; clear</span>
+              </div>
+              <p style={{ color: 'var(--ghi)', fontSize: 13, lineHeight: 1.7, maxWidth: 560, marginBottom: 20 }}>
+                Loads a realistic sample roster (multiple battalions, pending &amp; approved soldiers,
+                live scans, and a week of report data) so you can demo the full flow. Everything it
+                creates is tagged and removed by <strong>Clear</strong> — your real data is untouched.
+              </p>
+              <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+                <button className="btn btn-green" onClick={() => demo('seed')} disabled={actionLoading.demo}>
+                  {actionLoading.demo ? 'Working…' : 'Load Demo Data'}
+                </button>
+                <button className="btn btn-red" onClick={() => demo('clear')} disabled={actionLoading.demo}>
+                  Clear Demo Data
+                </button>
+              </div>
+              <p style={{ color: 'var(--gmd)', fontFamily: 'var(--mono)', fontSize: 10, letterSpacing: '.08em', marginTop: 20 }}>
+                Tip: after loading, open the Pending tab to show grouping &amp; S1 links, then Scans and Report.
+              </p>
             </div>
           )}
 
