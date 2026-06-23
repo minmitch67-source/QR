@@ -44,7 +44,7 @@ export default async function handler(req, res) {
   // Group pending by normalized unit, with a per-unit S1 link token
   const unitMap = new Map();
   for (const s of pending) {
-    const g = unitGroup(s.unit);
+    const g = unitGroup(s.unit, s.component);
     if (!unitMap.has(g.key)) {
       unitMap.set(g.key, { unitKey: g.key, label: g.label, token: unitToken(g.key), soldiers: [] });
     }

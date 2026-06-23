@@ -39,10 +39,16 @@ export const BATTALIONS = [
 ];
 
 // Resolve any free-text unit to a grouping { key, label }.
-export function unitGroup(raw) {
+// Battalion rollup only applies to U.S. Army; other components (ROK Army,
+// KATUSA, Navy, Marines, Civilian) stay as their own normalized free-text
+// group so a stray number can't pull them into a US battalion.
+export function unitGroup(raw, component) {
   const norm = stripPrefix(normalize(raw));
-  for (const b of BATTALIONS) {
-    if (b.match.test(norm)) return { key: b.id, label: b.name };
+  const rollup = !component || component === 'U.S. Army';
+  if (rollup) {
+    for (const b of BATTALIONS) {
+      if (b.match.test(norm)) return { key: b.id, label: b.name };
+    }
   }
   return { key: norm || 'UNSPECIFIED', label: norm || 'Unspecified' };
 }

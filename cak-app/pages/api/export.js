@@ -21,7 +21,7 @@ export default async function handler(req, res) {
 
     const headers = ['ID','Rank','Last','First','Component','Unit','Battalion','Site','Status','Entitlement','Start','End','Meals','Created'];
     const rows = soldiers.map(s => [
-      s.id, s.rank, s.lastName, s.firstName, s.component, s.unit, unitGroup(s.unit).label, s.site,
+      s.id, s.rank, s.lastName, s.firstName, s.component, s.unit, unitGroup(s.unit, s.component).label, s.site,
       s.status, s.entitlement, s.startDate, s.endDate,
       s.mealsServed, s.createdAt,
     ]);

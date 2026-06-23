@@ -28,7 +28,7 @@ export default async function handler(req, res) {
     const all = await Promise.all(ids.map(i => db.hgetall(`soldier:${i}`)));
     let n = 0;
     for (const s of all) {
-      if (s && unitGroup(s.unit).key === unit) { await setStatus(s.id, 'approve'); n++; }
+      if (s && unitGroup(s.unit, s.component).key === unit) { await setStatus(s.id, 'approve'); n++; }
     }
     return res.status(200).json({ ok: true, approved: n });
   }
