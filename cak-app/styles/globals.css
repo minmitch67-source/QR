@@ -14,7 +14,7 @@
   --red: #ff4d4d;
   --green: #2de89f;
   --mono: 'Courier New', ui-monospace, monospace;
-  --font: var(--font-archivo), 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font: var(--font-barlow), 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 html, body {
@@ -27,8 +27,8 @@ html, body {
   text-rendering: optimizeLegibility;
 }
 
-/* SpaceX-style display headings: tight, heavy, uppercase */
-h1, h2, h3 { font-weight: 800; letter-spacing: -.01em; line-height: 1; }
+/* SpaceX-style display headings: clean DIN-like, uppercase */
+h1, h2, h3 { font-weight: 700; letter-spacing: .005em; line-height: 1.02; }
 
 /* --- Buttons: thin, squared, arrow-friendly --- */
 .btn {

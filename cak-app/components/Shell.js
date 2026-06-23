@@ -22,7 +22,10 @@ export default function Shell({ active, actions, children }) {
     <div className={s.shell}>
       <header className={s.topbar}>
         <div className={s.tbLeft}>
-          <span className={s.flags}>🇰🇷 🇺🇸</span>
+          <div className={s.logos}>
+            <img src="/usfk.png" alt="USFK" className={s.logo} />
+            <img src="/esc19.png" alt="19th ESC" className={s.logo} />
+          </div>
           <div style={{ minWidth: 0 }}>
             <div className={s.tbTitle}>19th ESC // C-AK Meal Accountability</div>
             <div className={s.tbSub}>Camp Henry, Daegu · Prototype v1.0 · Not an official Army form</div>

@@ -45,20 +45,28 @@
 
 .tabs {
   display: flex;
-  border-bottom: 1px solid #1a1a1a;
-  padding: 0 24px;
+  gap: 2px;
+  border-bottom: 1px solid var(--line);
+  padding: 6px 24px 0;
   overflow-x: auto;
 }
 .tab {
-  padding: 12px 20px;
-  font-size: 10px; font-weight: 700; letter-spacing: .14em;
+  position: relative;
+  padding: 14px 18px;
+  font-size: 11px; font-weight: 600; letter-spacing: .16em;
   text-transform: uppercase; background: transparent;
-  color: #888; border: none; cursor: pointer;
-  border-bottom: 2px solid transparent;
+  color: var(--gmd); border: none; cursor: pointer;
   white-space: nowrap;
-  transition: color .2s, border-color .2s;
+  transition: color .18s;
 }
-.tabActive { color: #fff; border-bottom-color: #fff; }
+.tab::after {
+  content: ''; position: absolute; left: 18px; right: 18px; bottom: -1px;
+  height: 2px; background: #fff; transform: scaleX(0);
+  transition: transform .22s ease;
+}
+.tab:hover { color: #fff; }
+.tabActive { color: #fff; }
+.tabActive::after { transform: scaleX(1); }
 
 .content { padding: 24px; max-width: 900px; width: 100%; }
 @media (max-width: 600px) { .content { padding: 16px; } }

@@ -15,7 +15,9 @@ export default function Home() {
       <Shell active="register">
         {/* Hero */}
         <section className={styles.hero}>
-          <div className={styles.heroGrid} />
+          <div className={styles.heroGlow} />
+          <img src="/container.png" alt="Containerized Autonomous Kitchen" className={styles.heroImg} />
+          <div className={styles.heroShade} />
           <div className={styles.heroInner}>
             <div className={styles.heroEye}>
               <span className="eyebrow">19th ESC · Autonomous Kitchen Program · CJLOTS 2026</span>
@@ -40,7 +42,7 @@ export default function Home() {
         <section className={styles.cards}>
           <div className={styles.card}>
             <div className={styles.cardImgWrap}>
-              <img src="/kitchen.png" alt="Containerized Autonomous Kitchen" className={styles.cardImg} />
+              <img src="/container.png" alt="Containerized Autonomous Kitchen" className={styles.cardImg} />
             </div>
             <div className={styles.cardOverlay}>
               <div className={styles.cardKick}>System</div>

@@ -9,7 +9,9 @@
   border-bottom: 1px solid var(--line);
 }
 .tbLeft { display: flex; align-items: center; gap: 14px; min-width: 0; }
-.flags { display: flex; gap: 6px; font-size: 18px; line-height: 1; }
+.logos { display: flex; align-items: center; gap: 10px; }
+.logo { height: 30px; width: auto; display: block; filter: drop-shadow(0 1px 2px rgba(0,0,0,.6)); }
+@media (max-width: 480px) { .logo { height: 24px; } }
 .tbTitle { font-size: 12px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; white-space: nowrap; }
 .tbSub { font-family: var(--mono); font-size: 9px; letter-spacing: .12em; color: var(--gmd); text-transform: uppercase; margin-top: 3px; white-space: nowrap; }
 .tbRight { display: flex; align-items: center; gap: 14px; }
