@@ -1,5 +1,5 @@
 import db from '../../lib/db';
-import { unitKey } from '../../lib/units';
+import { unitGroup } from '../../lib/units';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end();
@@ -24,12 +24,11 @@ export default async function handler(req, res) {
 
   // Bulk-approve every pending soldier in a unit
   if (action === 'approveAllUnit') {
-    const key = unitKey(unit);
     const ids = (await db.smembers('pending')) || [];
     const all = await Promise.all(ids.map(i => db.hgetall(`soldier:${i}`)));
     let n = 0;
     for (const s of all) {
-      if (s && unitKey(s.unit) === key) { await setStatus(s.id, 'approve'); n++; }
+      if (s && unitGroup(s.unit).key === unit) { await setStatus(s.id, 'approve'); n++; }
     }
     return res.status(200).json({ ok: true, approved: n });
   }

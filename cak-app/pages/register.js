@@ -11,6 +11,8 @@ const RANKS = [
 
 const MEALS = ['Breakfast','Lunch','Dinner'];
 
+const COMPONENTS = ['U.S. Army','U.S. Navy','U.S. Marines','ROK Army','KATUSA','Civilian'];
+
 export default function Register() {
   const [step, setStep] = useState('form'); // form | success | error
   const [loading, setLoading] = useState(false);
@@ -20,7 +22,7 @@ export default function Register() {
   const timerRef = useRef(null);
 
   const [form, setForm] = useState({
-    lastName: '', firstName: '', rank: '', unit: '',
+    lastName: '', firstName: '', rank: '', unit: '', component: '',
     site: 'C-AK / Dogu Beach',
     startDate: '', endDate: '',
     meals: [], entitlement: '', notes: '',
@@ -51,14 +53,14 @@ export default function Register() {
     setResult(null);
     setError('');
     setForm({
-      lastName: '', firstName: '', rank: '', unit: '',
+      lastName: '', firstName: '', rank: '', unit: '', component: '',
       site: 'C-AK / Dogu Beach', startDate: '', endDate: '',
       meals: [], entitlement: '', notes: '',
     });
   };
 
   const submit = async () => {
-    if (!form.lastName || !form.firstName || !form.rank || !form.unit || !form.entitlement) {
+    if (!form.lastName || !form.firstName || !form.rank || !form.unit || !form.component || !form.entitlement) {
       setError('Please complete all required fields.');
       return;
     }
@@ -123,6 +125,13 @@ export default function Register() {
                   <input value={form.firstName} onChange={e => set('firstName', e.target.value.toUpperCase())} placeholder="JOHN" autoComplete="off" />
                 </div>
                 <div className={styles.fg}>
+                  <label>Component / Service *</label>
+                  <select value={form.component} onChange={e => set('component', e.target.value)}>
+                    <option value="">-- Select --</option>
+                    {COMPONENTS.map(c => <option key={c}>{c}</option>)}
+                  </select>
+                </div>
+                <div className={styles.fg}>
                   <label>Rank *</label>
                   <select value={form.rank} onChange={e => set('rank', e.target.value)}>
                     <option value="">-- Select --</option>
@@ -131,7 +140,7 @@ export default function Register() {
                 </div>
                 <div className={styles.fg}>
                   <label>Unit *</label>
-                  <input value={form.unit} onChange={e => set('unit', e.target.value.toUpperCase())} placeholder="e.g. 2-4 INF" autoComplete="off" />
+                  <input value={form.unit} onChange={e => set('unit', e.target.value.toUpperCase())} placeholder="e.g. A CO 498 CSSB" autoComplete="off" />
                 </div>
                 <div className={styles.fg}>
                   <label>Start Date</label>

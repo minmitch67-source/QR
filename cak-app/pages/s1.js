@@ -52,7 +52,7 @@ export default function S1Page() {
         <header style={S.hdr}>
           <div>
             <div style={S.eyebrow}>19th ESC · C-AK Meal Pass</div>
-            <div style={S.unit}>{u || '—'}</div>
+            <div style={S.unit}>{data?.unit || u || '—'}</div>
             <div style={S.role}>S1 Approval Queue</div>
           </div>
           <button style={S.refresh} onClick={() => call('list')}>↻</button>
@@ -80,7 +80,7 @@ export default function S1Page() {
               <div key={s.id} style={{ ...S.card, opacity: busy[s.id] ? 0.5 : 1 }}>
                 <div style={{ flex: 1 }}>
                   <div style={S.name}>{s.rank} {s.lastName}, {s.firstName}</div>
-                  <div style={S.meta}>{s.unit} · {String(s.entitlement || '').replace(/_/g, ' ')}</div>
+                  <div style={S.meta}>{s.unit} · {s.component} · {String(s.entitlement || '').replace(/_/g, ' ')}</div>
                   <div style={S.dates}>{s.startDate || '—'} → {s.endDate || '—'}{s.notes ? ` · ${s.notes}` : ''}</div>
                 </div>
                 <div style={S.btns}>

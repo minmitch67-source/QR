@@ -5,9 +5,9 @@ import QRCode from 'qrcode';
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end();
 
-  const { lastName, firstName, rank, unit, site, startDate, endDate, meals, entitlement, notes } = req.body;
+  const { lastName, firstName, rank, unit, component, site, startDate, endDate, meals, entitlement, notes } = req.body;
 
-  if (!lastName || !firstName || !rank || !unit || !entitlement) {
+  if (!lastName || !firstName || !rank || !unit || !component || !entitlement) {
     return res.status(400).json({ error: 'Missing required fields' });
   }
 
@@ -15,7 +15,7 @@ export default async function handler(req, res) {
   const createdAt = new Date().toISOString();
 
   const soldier = {
-    id, lastName, firstName, rank, unit,
+    id, lastName, firstName, rank, unit, component,
     site: site || 'C-AK / Dogu Beach',
     startDate, endDate,
     meals: JSON.stringify(meals || []),

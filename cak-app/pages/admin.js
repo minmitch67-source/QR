@@ -326,7 +326,7 @@ function SoldierCard({ soldier: s, children, loading }) {
     }}>
       <div>
         <div style={{ fontSize: 14, fontWeight: 700 }}>{s.rank} {s.lastName}, {s.firstName}</div>
-        <div style={{ fontSize: 11, color: '#888', marginTop: 2 }}>{s.unit} · {s.entitlement?.replace('_',' ')} · {s.site}</div>
+        <div style={{ fontSize: 11, color: '#888', marginTop: 2 }}>{s.unit} · {s.component} · {s.entitlement?.replace('_',' ')}</div>
         <div style={{ fontSize: 10, color: '#555', marginTop: 2, fontFamily: 'Courier New,monospace' }}>
           {s.startDate} → {s.endDate} · Meals served: {s.mealsServed}
         </div>

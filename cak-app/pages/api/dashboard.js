@@ -1,5 +1,5 @@
 import db from '../../lib/db';
-import { unitKey, unitToken } from '../../lib/units';
+import { unitGroup, unitToken } from '../../lib/units';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end();
@@ -44,11 +44,11 @@ export default async function handler(req, res) {
   // Group pending by normalized unit, with a per-unit S1 link token
   const unitMap = new Map();
   for (const s of pending) {
-    const key = unitKey(s.unit);
-    if (!unitMap.has(key)) {
-      unitMap.set(key, { unitKey: key, label: key, token: unitToken(key), soldiers: [] });
+    const g = unitGroup(s.unit);
+    if (!unitMap.has(g.key)) {
+      unitMap.set(g.key, { unitKey: g.key, label: g.label, token: unitToken(g.key), soldiers: [] });
     }
-    unitMap.get(key).soldiers.push(s);
+    unitMap.get(g.key).soldiers.push(s);
   }
   const pendingByUnit = [...unitMap.values()]
     .map(g => ({ ...g, count: g.soldiers.length }))

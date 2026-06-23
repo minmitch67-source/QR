@@ -1,5 +1,5 @@
 import db from '../../lib/db';
-import { unitKey, unitToken } from '../../lib/units';
+import { unitGroup, unitToken, groupLabel } from '../../lib/units';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end();
@@ -13,13 +13,13 @@ export default async function handler(req, res) {
   const loadPending = async () => {
     const ids = (await db.smembers('pending')) || [];
     const all = await Promise.all(ids.map(i => db.hgetall(`soldier:${i}`)));
-    return all.filter(s => s && unitKey(s.unit) === u);
+    return all.filter(s => s && unitGroup(s.unit).key === u);
   };
 
   // Act on a single soldier, but only if they belong to this unit (scope guard)
   const actOne = async (sid, act) => {
     const s = await db.hgetall(`soldier:${sid}`);
-    if (!s || unitKey(s.unit) !== u || s.status !== 'pending') return false;
+    if (!s || unitGroup(s.unit).key !== u || s.status !== 'pending') return false;
     if (act === 'approve') {
       await db.hset(`soldier:${sid}`, { status: 'approved', approvedAt: new Date().toISOString() });
       await db.srem('pending', sid);
@@ -43,7 +43,7 @@ export default async function handler(req, res) {
   const pending = await loadPending();
   const apprIds = (await db.smembers('approved')) || [];
   const approved = (await Promise.all(apprIds.map(i => db.hgetall(`soldier:${i}`))))
-    .filter(s => s && unitKey(s.unit) === u);
+    .filter(s => s && unitGroup(s.unit).key === u);
 
-  res.status(200).json({ ok: true, unit: u, pending, approvedCount: approved.length });
+  res.status(200).json({ ok: true, unit: groupLabel(u), pending, approvedCount: approved.length });
 }
