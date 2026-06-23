@@ -146,12 +146,20 @@ export default function Register() {
               <div className={styles.fg} style={{ marginBottom: 14 }}>
                 <label>Meal Periods</label>
                 <div className={styles.checkRow}>
-                  {MEALS.map(m => (
-                    <label key={m} className={styles.checkItem}>
-                      <input type="checkbox" checked={form.meals.includes(m)} onChange={() => toggleMeal(m)} />
-                      {m}
-                    </label>
-                  ))}
+                  {MEALS.map(m => {
+                    const active = form.meals.includes(m);
+                    return (
+                      <button
+                        type="button"
+                        key={m}
+                        className={`${styles.mealChip} ${active ? styles.mealChipOn : ''}`}
+                        onClick={() => toggleMeal(m)}
+                        aria-pressed={active}
+                      >
+                        {m}
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
 

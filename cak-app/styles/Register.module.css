@@ -76,13 +76,28 @@
 
 .fg { display: flex; flex-direction: column; }
 
-.checkRow { display: flex; gap: 20px; flex-wrap: wrap; padding: 10px 0; }
-.checkItem {
-  display: flex; align-items: center; gap: 8px;
-  font-size: 12px; font-weight: 600; color: #ccc; cursor: pointer;
-  text-transform: none; letter-spacing: normal;
+.checkRow { display: flex; gap: 12px; flex-wrap: wrap; padding: 10px 0; }
+.mealChip {
+  flex: 1 1 auto;
+  min-width: 110px;
+  padding: 16px 20px;
+  background: #0a0a0a;
+  border: 1px solid #2a2a2a;
+  border-radius: 10px;
+  color: #ccc;
+  font-size: 14px; font-weight: 700;
+  letter-spacing: .02em;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  transition: background .12s, border-color .12s, color .12s;
 }
-.checkItem input { width: auto; accent-color: #fff; }
+.mealChip:active { transform: scale(.98); }
+.mealChipOn {
+  background: #fff;
+  border-color: #fff;
+  color: #000;
+}
 
 .errBox {
   background: #1a0000;
