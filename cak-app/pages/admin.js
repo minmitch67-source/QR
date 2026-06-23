@@ -120,6 +120,25 @@ export default function Admin() {
     a.click();
   };
 
+  const exportDA3032 = async () => {
+    const res = await fetch('/api/export3032', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ pin: storedPin, dateFrom, dateTo }),
+    });
+    if (!res.ok) {
+      const j = await res.json().catch(() => ({}));
+      alert(j.error || 'Could not generate DA 3032');
+      return;
+    }
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `DA3032_${dateFrom}_to_${dateTo}.pdf`;
+    a.click();
+  };
+
   if (!authed) {
     return (
       <>
@@ -306,10 +325,14 @@ export default function Admin() {
                       </div>
                     ))}
                   </div>
-                  <div style={{ marginTop: 24, display: 'flex', gap: 12 }}>
+                  <div style={{ marginTop: 24, display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+                    <button className="btn btn-p" onClick={exportDA3032}>Export DA Form 3032 (PDF)</button>
                     <button className="btn btn-g" onClick={() => exportCSV('soldiers')}>Export Soldiers CSV</button>
                     <button className="btn btn-g" onClick={() => exportCSV('scans')}>Export Scans CSV</button>
                   </div>
+                  <p className={styles.sectionNote} style={{ marginTop: 10 }}>
+                    DA 3032 = one Signature Headcount Sheet per date &amp; meal in the range (44 diners/page). Meal Card # column uses the QR pass identifier.
+                  </p>
                 </>
               )}
             </div>
