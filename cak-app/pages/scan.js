@@ -3,6 +3,7 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import Shell from '../components/Shell';
 import Hero from '../components/Hero';
+import KioskGuard from '../components/KioskGuard';
 import styles from '../styles/Scanner.module.css';
 
 const MEAL_PERIODS = ['Breakfast', 'Lunch', 'Dinner'];
@@ -157,6 +158,7 @@ export default function Scanner() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
 
+      {kiosk && <KioskGuard />}
       <Shell active="scanner" kiosk={kiosk}>
         {(scanState === 'idle' || scanState === 'hardwareReady') && (
           <Hero

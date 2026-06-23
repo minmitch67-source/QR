@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import Shell from '../components/Shell';
+import KioskGuard from '../components/KioskGuard';
 import styles from '../styles/Register.module.css';
 
 const RANKS = [
@@ -94,6 +95,7 @@ export default function Register() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
 
+      {kiosk && <KioskGuard />}
       <Shell active="register" kiosk={kiosk}>
         {step === 'form' && (
           <>
