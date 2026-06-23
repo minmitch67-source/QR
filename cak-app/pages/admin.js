@@ -13,6 +13,7 @@ export default function Admin() {
   const [dateTo, setDateTo] = useState(today());
   const [actionLoading, setActionLoading] = useState({});
   const [storedPin, setStoredPin] = useState('');
+  const [copied, setCopied] = useState('');
 
   function today() { return new Date().toISOString().slice(0, 10); }
 
@@ -63,6 +64,27 @@ export default function Admin() {
     });
     setActionLoading(l => ({ ...l, [id]: false }));
     fetchData();
+  };
+
+  const approveAllUnit = async (g) => {
+    if (!confirm(`Approve ALL ${g.count} pending soldier(s) in ${g.label}?`)) return;
+    const key = `unit:${g.unitKey}`;
+    setActionLoading(l => ({ ...l, [key]: true }));
+    await fetch('/api/approve', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ pin: storedPin, action: 'approveAllUnit', unit: g.unitKey }),
+    });
+    setActionLoading(l => ({ ...l, [key]: false }));
+    fetchData();
+  };
+
+  const copyS1Link = async (g) => {
+    const url = `${window.location.origin}/s1?u=${encodeURIComponent(g.unitKey)}&t=${g.token}`;
+    try { await navigator.clipboard.writeText(url); }
+    catch { window.prompt('Copy this S1 approval link:', url); }
+    setCopied(g.unitKey);
+    setTimeout(() => setCopied(''), 2000);
   };
 
   const exportCSV = async (type) => {
@@ -154,18 +176,38 @@ export default function Admin() {
             <div>
               <div className={styles.sectionHdr}>
                 <h2 className={styles.sectionH2}>Pending Approvals</h2>
-                <span className={styles.sectionNote}>Approve or deny each request</span>
+                <span className={styles.sectionNote}>Grouped by unit · share a link with each S1</span>
               </div>
-              {!data?.pending?.length && <Empty text="No pending requests" />}
-              {data?.pending?.map(s => (
-                <SoldierCard key={s.id} soldier={s} loading={actionLoading[s.id]}>
-                  <button className="btn btn-green" onClick={() => approve(s.id,'approve')} disabled={actionLoading[s.id]}>
-                    Approve
-                  </button>
-                  <button className="btn btn-red" onClick={() => approve(s.id,'deny')} disabled={actionLoading[s.id]}>
-                    Deny
-                  </button>
-                </SoldierCard>
+              {!data?.pendingByUnit?.length && <Empty text="No pending requests" />}
+              {data?.pendingByUnit?.map(g => (
+                <div key={g.unitKey} style={{ marginBottom: 28 }}>
+                  <div style={{
+                    display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                    gap: 12, flexWrap: 'wrap', padding: '10px 0', borderBottom: '2px solid #2a2a2a',
+                  }}>
+                    <div style={{ fontSize: 15, fontWeight: 800, letterSpacing: '.02em' }}>
+                      {g.label} <span style={{ color: '#888', fontWeight: 600 }}>· {g.count} pending</span>
+                    </div>
+                    <div style={{ display: 'flex', gap: 8 }}>
+                      <button className="btn btn-g" onClick={() => copyS1Link(g)}>
+                        {copied === g.unitKey ? '✓ Copied' : 'Copy S1 Link'}
+                      </button>
+                      <button className="btn btn-green" onClick={() => approveAllUnit(g)} disabled={actionLoading[`unit:${g.unitKey}`]}>
+                        Approve All ({g.count})
+                      </button>
+                    </div>
+                  </div>
+                  {g.soldiers.map(s => (
+                    <SoldierCard key={s.id} soldier={s} loading={actionLoading[s.id]}>
+                      <button className="btn btn-green" onClick={() => approve(s.id,'approve')} disabled={actionLoading[s.id]}>
+                        Approve
+                      </button>
+                      <button className="btn btn-red" onClick={() => approve(s.id,'deny')} disabled={actionLoading[s.id]}>
+                        Deny
+                      </button>
+                    </SoldierCard>
+                  ))}
+                </div>
               ))}
             </div>
           )}
