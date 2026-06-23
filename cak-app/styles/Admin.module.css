@@ -101,6 +101,11 @@
   display: flex; gap: 12px; align-items: flex-end;
   margin-bottom: 28px; flex-wrap: wrap;
 }
+.dateRow .fg { flex: 0 0 160px; }
+@media (max-width: 520px) {
+  .dateRow .fg { flex: 1 1 140px; }
+  .dateRow > button { flex: 1 1 100%; }
+}
 .fg { display: flex; flex-direction: column; }
 .chartWrap { margin-bottom: 16px; }
 .reportTotal { font-size: 11px; color: var(--gmd); margin-bottom: 16px; font-family: var(--mono); }

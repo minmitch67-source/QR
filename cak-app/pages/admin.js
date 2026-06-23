@@ -408,14 +408,12 @@ function Empty({ text }) {
 function BarChart({ data }) {
   const max = Math.max(...data.map(d => d.count), 1);
   return (
-    <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, height: 120, padding: '0 0 8px' }}>
+    <div style={{ display: 'flex', alignItems: 'flex-end', gap: 10, height: 132, padding: '0 2px 4px', borderBottom: '1px solid var(--line)', overflowX: 'auto' }}>
       {data.map(d => (
-        <div key={d.date} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
-          <div style={{ fontSize: 9, color: '#fff' }}>{d.count}</div>
-          <div style={{ width: '100%', background: '#fff', height: `${(d.count / max) * 80}px`, minHeight: d.count ? 2 : 0 }} />
-          <div style={{ fontSize: 8, color: 'var(--gmd)', fontFamily: 'var(--mono)', transform: 'rotate(-45deg)', transformOrigin: 'top left', whiteSpace: 'nowrap' }}>
-            {d.date.slice(5)}
-          </div>
+        <div key={d.date} style={{ flex: '0 0 auto', width: 40, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
+          <div style={{ fontSize: 10, fontWeight: 700 }}>{d.count}</div>
+          <div style={{ width: 28, background: '#fff', height: `${(d.count / max) * 88}px`, minHeight: d.count ? 3 : 1, borderRadius: '2px 2px 0 0' }} />
+          <div style={{ fontSize: 8, color: 'var(--gmd)', fontFamily: 'var(--mono)', whiteSpace: 'nowrap' }}>{d.date.slice(5)}</div>
         </div>
       ))}
     </div>
