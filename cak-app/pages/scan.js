@@ -6,7 +6,8 @@ const MEAL_PERIODS = ['Breakfast', 'Lunch', 'Dinner'];
 
 export default function Scanner() {
   const [mealPeriod, setMealPeriod] = useState('');
-  const [scanState, setScanState] = useState('idle'); // idle | scanning | success | error | duplicate | notapproved
+  const [scanState, setScanState] = useState('idle'); // idle | scanning | hardwareReady | processing | success | error | duplicate | notapproved
+  const [mode, setMode] = useState('camera'); // camera | hardware
   const [result, setScanResult] = useState(null);
   const [errorMsg, setErrorMsg] = useState('');
   const videoRef = useRef(null);
@@ -14,6 +15,8 @@ export default function Scanner() {
   const streamRef = useRef(null);
   const animRef = useRef(null);
   const resetTimer = useRef(null);
+  const bufferRef = useRef('');
+  const lastKeyRef = useRef(0);
 
   const startCamera = async () => {
     try {
@@ -84,22 +87,61 @@ export default function Scanner() {
       setErrorMsg(e.message);
       setScanState('error');
     }
-    // Auto-reset after 5s
-    resetTimer.current = setTimeout(reset, 5000);
+    // Auto-reset (faster in hardware mode to keep a chow line moving)
+    resetTimer.current = setTimeout(reset, mode === 'hardware' ? 2500 : 5000);
   };
 
   const reset = () => {
     clearTimeout(resetTimer.current);
-    setScanState('idle');
     setScanResult(null);
     setErrorMsg('');
+    // In hardware mode, return to the ready screen so scanning continues
+    setScanState(mode === 'hardware' ? 'hardwareReady' : 'idle');
+  };
+
+  const fullReset = () => {
+    clearTimeout(resetTimer.current);
+    setMode('camera');
+    setScanResult(null);
+    setErrorMsg('');
+    setScanState('idle');
   };
 
   const beginScan = () => {
     if (!mealPeriod) return;
+    setMode('camera');
     setScanState('scanning');
     startCamera();
   };
+
+  const beginHardware = () => {
+    if (!mealPeriod) return;
+    setMode('hardware');
+    bufferRef.current = '';
+    setScanState('hardwareReady');
+  };
+
+  // Keyboard-wedge listener for external USB/Bluetooth QR scanners.
+  // These devices "type" the decoded string fast and send Enter.
+  useEffect(() => {
+    if (scanState !== 'hardwareReady') return;
+    const onKey = (e) => {
+      const now = Date.now();
+      // Clear stale partial input if there was a long pause before this key
+      if (now - lastKeyRef.current > 500) bufferRef.current = '';
+      lastKeyRef.current = now;
+      if (e.key === 'Enter') {
+        const data = bufferRef.current.trim();
+        bufferRef.current = '';
+        if (data) processScan(data);
+        e.preventDefault();
+        return;
+      }
+      if (e.key.length === 1) bufferRef.current += e.key;
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [scanState, mealPeriod, mode]);
 
   useEffect(() => () => { stopCamera(); clearTimeout(resetTimer.current); }, []);
 
@@ -138,9 +180,26 @@ export default function Scanner() {
                 onClick={beginScan}
                 disabled={!mealPeriod}
               >
-                Start Scanning →
+                📷 Camera Scan →
               </button>
-              <p className={styles.hint}>Present QR pass to camera when ready</p>
+              <button
+                className={`btn btn-g btn-lg ${styles.scanStartBtn}`}
+                onClick={beginHardware}
+                disabled={!mealPeriod}
+              >
+                ⌨ Handheld Scanner →
+              </button>
+              <p className={styles.hint}>Pick a meal period, then choose camera or a plugged-in handheld scanner</p>
+            </div>
+          )}
+
+          {scanState === 'hardwareReady' && (
+            <div className={styles.idleBox}>
+              <div className={styles.mealBadge}>{mealPeriod}</div>
+              <div className={styles.scanIcon}>⌨</div>
+              <h1 className={styles.h1}>Ready — Scan Pass</h1>
+              <p className={styles.hint}>Pull the trigger on the handheld scanner to read a soldier&apos;s QR pass. Each scan logs automatically.</p>
+              <button className="btn btn-g" onClick={fullReset} style={{ marginTop: 24 }}>Change Meal / Cancel</button>
             </div>
           )}
 
