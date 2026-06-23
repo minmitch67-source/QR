@@ -23,7 +23,7 @@
 .hdrSep { color: #fff; }
 .hdrTitle { font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
 .hdrRight { display: flex; align-items: center; gap: 16px; }
-.hdrSite { font-size: 9px; font-family: var(--mono); color: #fff; letter-spacing: .1em; }
+.hdrSite { font-size: 9px; font-family: var(--mono); color: var(--gmd); letter-spacing: .1em; }
 .clock { font-family: var(--mono); font-size: 13px; font-weight: 700; letter-spacing: .04em; }
 
 /* ---- SpaceX-style hero: container bleeds into a black background ---- */
@@ -116,7 +116,7 @@
 }
 
 .disclaimer {
-  font-size: 10px; color: #fff; line-height: 1.6;
+  font-size: 10px; color: var(--gmd); line-height: 1.6;
   margin-top: 20px;
   font-family: var(--mono);
 }
@@ -138,13 +138,13 @@
   font-size: 28px; font-weight: 900; letter-spacing: -.02em;
   text-transform: uppercase; margin-bottom: 12px;
 }
-.successLead { font-size: 13px; color: #fff; line-height: 1.7; margin-bottom: 24px; }
+.successLead { font-size: 13px; color: var(--ghi); line-height: 1.7; margin-bottom: 24px; }
 .successName { font-size: 20px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
-.successUnit { font-size: 12px; color: #fff; margin-top: 4px; margin-bottom: 24px; }
+.successUnit { font-size: 12px; color: var(--gmd); margin-top: 4px; margin-bottom: 24px; }
 
 .qrWrap { margin: 16px 0 24px; }
 .qrImg { width: 180px; height: 180px; image-rendering: pixelated; border: 2px solid #222; }
-.qrNote { font-size: 10px; color: #fff; margin-top: 8px; font-family: var(--mono); }
+.qrNote { font-size: 10px; color: var(--gmd); margin-top: 8px; font-family: var(--mono); }
 
 .countdownRow {
   height: 2px; background: #1a1a1a; margin-bottom: 8px;
@@ -154,4 +154,4 @@
   height: 100%; background: #fff;
   transition: width 1s linear;
 }
-.countdownText { font-size: 10px; color: #fff; font-family: var(--mono); }
+.countdownText { font-size: 10px; color: var(--gmd); font-family: var(--mono); }
