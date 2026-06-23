@@ -1,0 +1,101 @@
+.page {
+  min-height: 100vh; background: #000;
+  display: flex; flex-direction: column;
+}
+.hdr {
+  height: 52px; background: rgba(0,0,0,.9);
+  border-bottom: 1px solid #1a1a1a;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 24px;
+}
+.hdrTitle { font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
+.hdrSite { font-size: 9px; font-family: 'Courier New', monospace; color: #888; letter-spacing: .1em; }
+
+.body {
+  flex: 1; display: flex; align-items: center; justify-content: center;
+  padding: 40px 24px;
+}
+
+.idleBox { text-align: center; max-width: 400px; width: 100%; }
+.scanIcon { font-size: 64px; color: #333; margin-bottom: 24px; }
+.h1 {
+  font-size: 28px; font-weight: 900; letter-spacing: -.02em;
+  text-transform: uppercase; margin-bottom: 32px;
+}
+
+.mealBtns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 32px; }
+.mealBtn {
+  padding: 12px 24px;
+  background: #111; border: 1px solid #222;
+  color: #888; font-size: 11px; font-weight: 700;
+  letter-spacing: .12em; text-transform: uppercase;
+  cursor: pointer; transition: all .2s;
+}
+.mealBtnActive {
+  background: #fff; color: #000; border-color: #fff;
+}
+.scanStartBtn { width: 100%; justify-content: center; margin-bottom: 16px; }
+.scanStartBtn:disabled { opacity: .3; cursor: not-allowed; }
+.hint { font-size: 10px; color: #444; font-family: 'Courier New', monospace; letter-spacing: .08em; }
+
+/* Camera */
+.cameraBox { width: 100%; max-width: 500px; text-align: center; }
+.mealBadge {
+  display: inline-block; margin-bottom: 16px;
+  padding: 4px 12px;
+  background: #fff; color: #000;
+  font-size: 10px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase;
+}
+.viewfinder {
+  position: relative; width: 100%; aspect-ratio: 1;
+  background: #0a0a0a; overflow: hidden; margin-bottom: 16px;
+}
+.video { width: 100%; height: 100%; object-fit: cover; }
+.canvas { display: none; }
+
+.scanLine {
+  position: absolute; left: 0; right: 0; top: 50%;
+  height: 2px; background: rgba(255,255,255,.4);
+  animation: scanAnim 2s ease-in-out infinite;
+}
+@keyframes scanAnim {
+  0%, 100% { top: 20%; }
+  50% { top: 80%; }
+}
+
+.corner { position: absolute; width: 24px; height: 24px; }
+.scanHint { font-size: 11px; color: #666; margin-bottom: 20px; font-family: 'Courier New', monospace; }
+
+/* Result */
+.resultBox { text-align: center; max-width: 360px; width: 100%; }
+.resultIcon {
+  font-size: 64px; margin-bottom: 20px; line-height: 1;
+  width: 80px; height: 80px;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 24px;
+  border-radius: 50%;
+}
+.ok { background: #002211; color: #2d9; font-size: 40px; }
+.warn { background: #221100; color: #fa0; font-size: 36px; }
+.err { background: #220011; color: #e53; font-size: 36px; }
+
+.resultName {
+  font-size: 28px; font-weight: 900; text-transform: uppercase;
+  letter-spacing: -.01em; margin-bottom: 8px;
+}
+.resultUnit { font-size: 13px; color: #888; margin-bottom: 20px; }
+.resultMeal {
+  font-size: 11px; font-weight: 700; letter-spacing: .14em;
+  text-transform: uppercase; color: #2d9; margin-bottom: 8px;
+}
+.resultCount { font-size: 10px; color: #555; font-family: 'Courier New', monospace; }
+.autoReset { font-size: 9px; color: #333; margin-top: 16px; font-family: 'Courier New', monospace; }
+
+.spinner {
+  width: 40px; height: 40px;
+  border: 2px solid #222; border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin .7s linear infinite;
+  margin: 0 auto 20px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }

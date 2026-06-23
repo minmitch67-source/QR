@@ -1,0 +1,104 @@
+.loginPage {
+  min-height: 100vh; background: #000;
+  display: flex; align-items: center; justify-content: center;
+}
+.loginBox { width: 100%; max-width: 360px; padding: 24px; }
+.loginEye {
+  font-size: 9px; font-weight: 700; letter-spacing: .2em;
+  text-transform: uppercase; color: #888;
+  font-family: 'Courier New', monospace;
+  margin-bottom: 24px;
+}
+.loginH1 {
+  font-size: 36px; font-weight: 900; text-transform: uppercase;
+  letter-spacing: -.02em; margin-bottom: 8px;
+}
+.loginSub { font-size: 12px; color: #888; margin-bottom: 32px; }
+.pinWrap { margin-bottom: 20px; }
+.pinInput {
+  font-size: 24px !important; letter-spacing: .4em;
+  text-align: center;
+}
+.pinErr { font-size: 11px; color: #e53; margin-top: 8px; }
+
+/* Main layout */
+.page { min-height: 100vh; background: #000; display: flex; flex-direction: column; }
+
+.hdr {
+  height: 52px; background: rgba(0,0,0,.95);
+  border-bottom: 1px solid #1a1a1a;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 24px; position: sticky; top: 0; z-index: 100;
+}
+.hdrLeft { display: flex; align-items: center; gap: 12px; }
+.hdrTitle { font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
+.hdrSep { color: #333; }
+.hdrSub { font-size: 10px; color: #888; font-family: 'Courier New', monospace; }
+.hdrRight { display: flex; gap: 8px; }
+.refreshBtn { padding: 6px 14px !important; font-size: 10px !important; }
+
+.statStrip {
+  display: flex;
+  border-bottom: 1px solid #1a1a1a;
+}
+@media (max-width: 480px) { .statStrip { flex-wrap: wrap; } }
+
+.tabs {
+  display: flex;
+  border-bottom: 1px solid #1a1a1a;
+  padding: 0 24px;
+  overflow-x: auto;
+}
+.tab {
+  padding: 12px 20px;
+  font-size: 10px; font-weight: 700; letter-spacing: .14em;
+  text-transform: uppercase; background: transparent;
+  color: #888; border: none; cursor: pointer;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color .2s, border-color .2s;
+}
+.tabActive { color: #fff; border-bottom-color: #fff; }
+
+.content { padding: 24px; max-width: 900px; width: 100%; }
+@media (max-width: 600px) { .content { padding: 16px; } }
+
+.sectionHdr {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 20px; flex-wrap: wrap; gap: 12px;
+}
+.sectionH2 {
+  font-size: 16px; font-weight: 900; text-transform: uppercase;
+  letter-spacing: -.01em;
+}
+.sectionNote { font-size: 10px; color: #888; font-family: 'Courier New', monospace; }
+
+/* Scans table */
+.scanTable { display: flex; flex-direction: column; gap: 0; }
+.scanRow {
+  display: grid;
+  grid-template-columns: 80px 1fr 1fr 100px;
+  gap: 12px; padding: 10px 0;
+  border-bottom: 1px solid #111;
+  align-items: center;
+  font-size: 12px;
+}
+.scanTime { font-family: 'Courier New', monospace; color: #888; }
+.scanName { font-weight: 600; }
+.scanUnit { color: #888; }
+.scanMeal { font-size: 9px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: #2d9; text-align: right; }
+
+/* Report */
+.dateRow {
+  display: flex; gap: 12px; align-items: flex-end;
+  margin-bottom: 28px; flex-wrap: wrap;
+}
+.fg { display: flex; flex-direction: column; }
+.chartWrap { margin-bottom: 16px; }
+.reportTotal { font-size: 11px; color: #888; margin-bottom: 16px; font-family: 'Courier New', monospace; }
+.reportTable { display: flex; flex-direction: column; gap: 6px; }
+.reportRow { display: flex; align-items: center; gap: 12px; }
+.reportDate { font-family: 'Courier New', monospace; font-size: 10px; color: #888; width: 80px; flex-shrink: 0; }
+.reportBar { flex: 1; height: 6px; background: #111; overflow: hidden; }
+.reportBarFill { display: block; height: 100%; background: #fff; }
+.reportCount { font-size: 11px; font-weight: 700; width: 40px; text-align: right; }

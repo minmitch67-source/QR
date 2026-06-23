@@ -1,0 +1,76 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #000;
+  --bg1: #0a0a0a;
+  --bg2: #111;
+  --line: #1a1a1a;
+  --line2: #222;
+  --w: #fff;
+  --ghi: #ccc;
+  --gmd: #888;
+  --glo: #444;
+  --accent: #fff;
+  --red: #e53;
+  --green: #2d9;
+  --mono: 'Courier New', monospace;
+  --font: 'Inter', -apple-system, sans-serif;
+}
+
+html, body {
+  background: var(--bg);
+  color: var(--w);
+  font-family: var(--font);
+  font-size: 14px;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+.btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 12px 28px;
+  font-size: 11px; font-weight: 700; letter-spacing: .14em;
+  text-transform: uppercase; border: none; cursor: pointer;
+  transition: opacity .2s;
+}
+.btn:hover { opacity: .8; }
+.btn-p { background: var(--w); color: #000; }
+.btn-g { background: transparent; color: var(--w); border: 1px solid var(--line2); }
+.btn-red { background: var(--red); color: var(--w); }
+.btn-green { background: var(--green); color: #000; }
+.btn-lg { padding: 14px 36px; font-size: 12px; }
+.btn-block { width: 100%; justify-content: center; }
+
+input, select, textarea {
+  width: 100%;
+  background: var(--bg2);
+  border: 1px solid var(--line2);
+  color: var(--w);
+  padding: 10px 14px;
+  font-size: 13px;
+  font-family: var(--font);
+  outline: none;
+  transition: border-color .2s;
+}
+input:focus, select:focus, textarea:focus {
+  border-color: #555;
+}
+select option { background: #111; }
+label {
+  display: block;
+  font-size: 9px; font-weight: 700; letter-spacing: .18em;
+  text-transform: uppercase; color: var(--gmd);
+  margin-bottom: 6px;
+}
+textarea { resize: vertical; min-height: 72px; }
+
+.mono { font-family: var(--mono); }
+.tag {
+  display: inline-block;
+  padding: 2px 8px;
+  font-size: 9px; font-weight: 700; letter-spacing: .12em;
+  text-transform: uppercase;
+}
+.tag-pending { background: #332200; color: #fa0; }
+.tag-approved { background: #002211; color: var(--green); }
+.tag-denied { background: #220011; color: var(--red); }
