@@ -1,21 +1,7 @@
-import { useState, useEffect } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
+import Shell from '../components/Shell';
 import styles from '../styles/Home.module.css';
-
-const NAV = [
-  { section: 'Operations' },
-  { label: 'Register', icon: '＋', href: '/register' },
-  { label: 'Dashboard', icon: '▦', href: '/admin' },
-  { label: 'Approver Queue', icon: '▶', href: '/admin' },
-  { section: 'Access' },
-  { label: 'QR Passes', icon: '◆', href: '/register' },
-  { label: 'Scanner', icon: '◎', href: '/scan' },
-  { section: 'Data' },
-  { label: 'Reports', icon: '▤', href: '/admin' },
-  { section: 'System' },
-  { label: 'Settings', icon: '⚙', href: '/admin' },
-];
 
 export default function Home() {
   const router = useRouter();
@@ -26,123 +12,64 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
 
-      <div className={styles.shell}>
-        {/* Top status bar */}
-        <header className={styles.topbar}>
-          <div className={styles.tbLeft}>
-            <span className={styles.flags}>🇰🇷 🇺🇸</span>
-            <div style={{ minWidth: 0 }}>
-              <div className={styles.tbTitle}>19th ESC // C-AK Meal Accountability</div>
-              <div className={styles.tbSub}>Camp Henry, Daegu · Prototype v1.0 · Not an official Army form</div>
+      <Shell active="register">
+        {/* Hero */}
+        <section className={styles.hero}>
+          <div className={styles.heroGrid} />
+          <div className={styles.heroInner}>
+            <div className={styles.heroEye}>
+              <span className="eyebrow">19th ESC · Autonomous Kitchen Program · CJLOTS 2026</span>
+            </div>
+            <h1 className={styles.h1}>
+              C-AK<br /><span className={styles.dim}>Meal</span><br />Pass
+            </h1>
+            <p className={styles.lead}>
+              Request a QR meal pass for the Containerized Autonomous Kitchen at
+              Dogu Beach, Pohang. Passes are issued after your unit S1 or Food
+              Service NCO approval.
+            </p>
+            <div className={styles.heroBtns}>
+              <button className="btn btn-p btn-lg" onClick={() => router.push('/register')}>Request Pass →</button>
+              <button className="btn btn-g btn-lg" onClick={() => router.push('/scan')}>Scan Pass</button>
+            </div>
+            <div className={styles.scrollHint}>↓ Approvers — open the Dashboard</div>
+          </div>
+        </section>
+
+        {/* Cards */}
+        <section className={styles.cards}>
+          <div className={styles.card}>
+            <div className={styles.cardImgWrap}>
+              <img src="/kitchen.png" alt="Containerized Autonomous Kitchen" className={styles.cardImg} />
+            </div>
+            <div className={styles.cardOverlay}>
+              <div className={styles.cardKick}>System</div>
+              <div className={styles.cardTitle}>Containerized Autonomous Kitchen</div>
+              <div className={styles.cardDesc}>Dual-line robotic galley — sustained autonomous meals at the point of need.</div>
             </div>
           </div>
-          <div className={styles.tbRight}>
-            <span className={styles.tbSite}>Site: <b>C-AK / Dogu Beach</b></span>
-            <Clock />
+          <div className={styles.card}>
+            <div className={styles.cardImgWrap} style={{ background: 'radial-gradient(circle at 50% 40%, #14110c, #050505 70%)' }} />
+            <div className={styles.cardOverlay}>
+              <div className={styles.cardKick}>Platform</div>
+              <div className={styles.cardTitle}>Robotic Kitchen Platform</div>
+              <div className={styles.cardDesc}>~250 PAX/day throughput with QR-verified, unit-accountable meal logging.</div>
+            </div>
           </div>
-        </header>
+        </section>
 
-        <div className={styles.layout}>
-          {/* Sidebar */}
-          <nav className={styles.sidebar}>
-            {NAV.map((n, i) =>
-              n.section ? (
-                <div key={i} className={styles.navSection}>{n.section}</div>
-              ) : (
-                <button
-                  key={i}
-                  className={`${styles.navItem} ${n.label === 'Register' ? styles.navActive : ''}`}
-                  onClick={() => router.push(n.href)}
-                >
-                  <span className={styles.navDot}>{n.icon}</span> {n.label}
-                </button>
-              )
-            )}
-          </nav>
+        {/* CTA */}
+        <section className={styles.cta}>
+          <div className={styles.ctaH}>Three taps to a meal pass</div>
+          <div className={styles.ctaSub}>Register → unit S1 approves → scan at the line.</div>
+          <div className={styles.heroBtns} style={{ justifyContent: 'center' }}>
+            <button className="btn btn-p btn-lg" onClick={() => router.push('/register')}>Request Pass →</button>
+            <button className="btn btn-g btn-lg" onClick={() => router.push('/admin')}>Admin Dashboard</button>
+          </div>
+        </section>
 
-          {/* Main */}
-          <main className={styles.main}>
-            {/* Hero */}
-            <section className={styles.hero}>
-              <div className={styles.heroGrid} />
-              <div className={styles.heroInner}>
-                <div className={styles.heroEye}>
-                  <span className="eyebrow">19th ESC · Autonomous Kitchen Program · CJLOTS 2026</span>
-                </div>
-                <h1 className={styles.h1}>
-                  C-AK<br /><span className={styles.dim}>Meal</span><br />Pass
-                </h1>
-                <p className={styles.lead}>
-                  Request a QR meal pass for the Containerized Autonomous Kitchen at
-                  Dogu Beach, Pohang. Passes are issued after your unit S1 or Food
-                  Service NCO approval.
-                </p>
-                <div className={styles.heroBtns}>
-                  <button className="btn btn-p btn-lg" onClick={() => router.push('/register')}>Request Pass →</button>
-                  <button className="btn btn-g btn-lg" onClick={() => router.push('/scan')}>Scan Pass</button>
-                </div>
-                <div className={styles.scrollHint}>↓ Approvers — open the Dashboard</div>
-              </div>
-            </section>
-
-            {/* Cards */}
-            <section className={styles.cards}>
-              <div className={styles.card}>
-                <div className={styles.cardImgWrap}>
-                  <img src="/kitchen.png" alt="Containerized Autonomous Kitchen" className={styles.cardImg} />
-                </div>
-                <div className={styles.cardOverlay}>
-                  <div className={styles.cardKick}>System</div>
-                  <div className={styles.cardTitle}>Containerized Autonomous Kitchen</div>
-                  <div className={styles.cardDesc}>Dual-line robotic galley — sustained autonomous meals at the point of need.</div>
-                </div>
-              </div>
-              <div className={styles.card}>
-                <div className={styles.cardImgWrap} style={{ background: 'radial-gradient(circle at 50% 40%, #14110c, #050505 70%)' }} />
-                <div className={styles.cardOverlay}>
-                  <div className={styles.cardKick}>Platform</div>
-                  <div className={styles.cardTitle}>Robotic Kitchen Platform</div>
-                  <div className={styles.cardDesc}>~250 PAX/day throughput with QR-verified, unit-accountable meal logging.</div>
-                </div>
-              </div>
-            </section>
-
-            {/* CTA */}
-            <section className={styles.cta}>
-              <div className={styles.ctaH}>Three taps to a meal pass</div>
-              <div className={styles.ctaSub}>Register → unit S1 approves → scan at the line.</div>
-              <div className={styles.heroBtns} style={{ justifyContent: 'center' }}>
-                <button className="btn btn-p btn-lg" onClick={() => router.push('/register')}>Request Pass →</button>
-                <button className="btn btn-g btn-lg" onClick={() => router.push('/admin')}>Admin Dashboard</button>
-              </div>
-            </section>
-
-            <footer className={styles.foot}>19th ESC · CJLOTS 2026 · Dogu Beach, Pohang · For official use during exercise</footer>
-          </main>
-        </div>
-      </div>
+        <footer className={styles.foot}>19th ESC · CJLOTS 2026 · Dogu Beach, Pohang · For official use during exercise</footer>
+      </Shell>
     </>
-  );
-}
-
-function Clock() {
-  const [t, setT] = useState({ time: '', date: '' });
-  useEffect(() => {
-    const tick = () => {
-      const d = new Date();
-      setT({
-        time: d.toLocaleTimeString('en-US', { hour12: false }),
-        date: d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' }).toUpperCase(),
-      });
-    };
-    tick();
-    const iv = setInterval(tick, 1000);
-    return () => clearInterval(iv);
-  }, []);
-  return (
-    <div className={styles.clock}>
-      <div className={styles.clockTime}>{t.time}</div>
-      <div className={styles.clockDate}>{t.date}</div>
-    </div>
   );
 }

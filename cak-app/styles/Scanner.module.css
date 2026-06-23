@@ -12,7 +12,8 @@
 .hdrSite { font-size: 9px; font-family: 'Courier New', monospace; color: #888; letter-spacing: .1em; }
 
 .body {
-  flex: 1; display: flex; align-items: center; justify-content: center;
+  min-height: calc(100vh - 58px);
+  display: flex; align-items: center; justify-content: center;
   padding: 40px 24px;
 }
 

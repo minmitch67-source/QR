@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import Head from 'next/head';
+import Shell from '../components/Shell';
 import styles from '../styles/Admin.module.css';
 
 export default function Admin() {
@@ -133,24 +134,12 @@ export default function Admin() {
   return (
     <>
       <Head><title>C-AK Admin Dashboard</title></Head>
-      <div className={styles.page}>
-
-        {/* Header */}
-        <header className={styles.hdr}>
-          <div className={styles.hdrLeft}>
-            <span className={styles.hdrTitle}>C-AK Admin</span>
-            <span className={styles.hdrSep}>·</span>
-            <span className={styles.hdrSub}>19th ESC / Dogu Beach</span>
-          </div>
-          <div className={styles.hdrRight}>
-            <button className={`btn btn-g ${styles.refreshBtn}`} onClick={() => fetchData()}>
-              {loading ? '…' : '↻'} Refresh
-            </button>
-            <button className={`btn btn-g ${styles.refreshBtn}`} onClick={() => setAuthed(false)}>
-              Lock
-            </button>
-          </div>
-        </header>
+      <Shell active="dashboard" actions={
+        <>
+          <button className="btn btn-g" onClick={() => fetchData()}>{loading ? '…' : '↻'} Refresh</button>
+          <button className="btn btn-g" onClick={() => setAuthed(false)}>Lock</button>
+        </>
+      }>
 
         {/* Stat strip */}
         <div className={styles.statStrip}>
@@ -303,7 +292,7 @@ export default function Admin() {
           )}
 
         </div>
-      </div>
+      </Shell>
     </>
   );
 }

@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import Head from 'next/head';
+import Shell from '../components/Shell';
 import styles from '../styles/Scanner.module.css';
 
 const MEAL_PERIODS = ['Breakfast', 'Lunch', 'Dinner'];
@@ -152,12 +153,7 @@ export default function Scanner() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
 
-      <div className={styles.page}>
-        <header className={styles.hdr}>
-          <span className={styles.hdrTitle}>C-AK / Meal Scanner</span>
-          <span className={styles.hdrSite}>DOGU BEACH · 19th ESC</span>
-        </header>
-
+      <Shell active="scanner">
         <div className={styles.body}>
 
           {scanState === 'idle' && (
@@ -266,7 +262,7 @@ export default function Scanner() {
           )}
 
         </div>
-      </div>
+      </Shell>
     </>
   );
 }
