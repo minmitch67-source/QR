@@ -1,0 +1,27 @@
+.hero {
+  position: relative; overflow: hidden;
+  min-height: 50vh;
+  display: flex; align-items: flex-end;
+  padding: 0 52px 44px;
+  border-bottom: 1px solid var(--line);
+  background: #000;
+}
+.short { min-height: 34vh; }
+@media (max-width: 600px) { .hero { padding: 0 22px 30px; min-height: 40vh; } .short { min-height: 30vh; } }
+
+.glow { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(820px 540px at 72% 40%, rgba(96,124,162,.20), transparent 60%); }
+.img {
+  position: absolute; right: -4%; top: 47%; transform: translateY(-50%);
+  width: min(74%, 1040px); pointer-events: none; user-select: none;
+  filter: drop-shadow(0 40px 80px rgba(0,0,0,.7));
+  -webkit-mask-image: linear-gradient(to left, #000 46%, transparent 86%);
+  mask-image: linear-gradient(to left, #000 46%, transparent 86%);
+}
+.shade { position: absolute; inset: 0; pointer-events: none; background: linear-gradient(to right, #000 2%, rgba(0,0,0,.55) 34%, transparent 62%), linear-gradient(to top, #000 0%, transparent 30%); }
+@media (max-width: 900px) { .img { width: 150%; right: -28%; top: 36%; opacity: .4; } }
+
+.inner { position: relative; max-width: 560px; }
+.eye { display: flex; align-items: center; gap: 12px; }
+.eye::before { content: ''; width: 30px; height: 1px; background: #666; }
+.h1 { font-size: clamp(34px, 6vw, 66px); font-weight: 700; line-height: .98; letter-spacing: 0; text-transform: uppercase; color: #fff; margin: 18px 0 0; }
+.lead { font-size: 14px; color: var(--ghi); line-height: 1.7; max-width: 420px; margin-top: 16px; }

@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import Head from 'next/head';
 import Shell from '../components/Shell';
+import Hero from '../components/Hero';
 import styles from '../styles/Admin.module.css';
 
 export default function Admin() {
@@ -140,6 +141,12 @@ export default function Admin() {
           <button className="btn btn-g" onClick={() => setAuthed(false)}>Lock</button>
         </>
       }>
+        <Hero
+          short
+          eyebrow="19th ESC · Meal Accountability · CJLOTS 2026"
+          title={<>Admin<br />Dashboard</>}
+          lead="Approve requests by unit, monitor live scans, and export accountability reports."
+        />
 
         {/* Stat strip */}
         <div className={styles.statStrip}>

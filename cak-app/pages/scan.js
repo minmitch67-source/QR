@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import Head from 'next/head';
 import Shell from '../components/Shell';
+import Hero from '../components/Hero';
 import styles from '../styles/Scanner.module.css';
 
 const MEAL_PERIODS = ['Breakfast', 'Lunch', 'Dinner'];
@@ -154,6 +155,14 @@ export default function Scanner() {
       </Head>
 
       <Shell active="scanner">
+        {(scanState === 'idle' || scanState === 'hardwareReady') && (
+          <Hero
+            short
+            eyebrow="19th ESC · Containerized Autonomous Kitchen"
+            title="Meal Scanner"
+            lead="Verify QR meal passes at the line. Camera or handheld scanner — each scan logs automatically."
+          />
+        )}
         <div className={styles.body}>
 
           {scanState === 'idle' && (
