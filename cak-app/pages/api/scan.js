@@ -55,6 +55,7 @@ export default async function handler(req, res) {
     lastName: soldier.lastName,
     firstName: soldier.firstName,
     unit: soldier.unit,
+    component: soldier.component || '',
     mealPeriod: mealPeriod || 'general',
     scannedAt: now.toISOString(),
     date: dateKey,

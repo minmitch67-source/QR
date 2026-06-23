@@ -12,8 +12,8 @@ const SAMPLE = [
   { rank: 'CPL', lastName: 'THOMPSON', firstName: 'RYAN',   unit: 'HHC 25 TRANS',    component: 'U.S. Army',   entitlement: 'meal_card',    status: 'approved' },
   { rank: 'CPT', lastName: 'WILSON',   firstName: 'JAMES',  unit: '6 ORD',           component: 'U.S. Army',   entitlement: 'meal_card',    status: 'pending'  },
   { rank: 'SPC', lastName: 'GARCIA',   firstName: 'MARIA',  unit: '168 MMB',         component: 'U.S. Army',   entitlement: 'bas',          status: 'approved' },
-  { rank: 'PV2', lastName: 'PARK',     firstName: 'SOO',    unit: 'HHC 19 ESC',      component: 'KATUSA',      entitlement: 'meal_card',    status: 'pending'  },
-  { rank: 'SGT', lastName: 'LEE',      firstName: 'MINHO',  unit: 'ROK 1 MARDIV',    component: 'ROK Army',    entitlement: 'travel_order', status: 'pending'  },
+  { rank: 'PV2', lastName: 'PARK',     firstName: 'SOO',    unit: 'HHC 19 ESC',      component: 'KATUSA',      entitlement: 'meal_card',    status: 'approved' },
+  { rank: 'SGT', lastName: 'LEE',      firstName: 'MINHO',  unit: 'ROK 1 MARDIV',    component: 'ROK Army',    entitlement: 'travel_order', status: 'approved' },
   { rank: 'PO2', lastName: 'BROOKS',   firstName: 'ALAN',   unit: 'NAVY BEACH GRP 1',component: 'U.S. Navy',   entitlement: 'travel_order', status: 'pending'  },
 ];
 
@@ -93,6 +93,7 @@ export default async function handler(req, res) {
       const scan = {
         id: sid, soldierId: a.id,
         rank: a.rank, lastName: a.lastName, firstName: a.firstName, unit: a.unit,
+        component: a.component || '',
         mealPeriod: meals[i % meals.length],
         date: today,
         scannedAt: new Date(Date.now() - i * 1800000).toISOString(),
