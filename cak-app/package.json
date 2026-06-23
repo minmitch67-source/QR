@@ -8,6 +8,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "@sarap422/font-d-din": "^1.0.6",
     "@vercel/kv": "^2.0.0",
     "jsqr": "^1.4.0",
     "next": "14.2.3",
