@@ -25,6 +25,7 @@ export default function Scanner() {
   const bufferRef = useRef('');
   const lastKeyRef = useRef(0);
   const idleRef = useRef(null);
+  const hwInputRef = useRef(null);
 
   const startCamera = async () => {
     try {
@@ -130,41 +131,34 @@ export default function Scanner() {
     setScanState('hardwareReady');
   };
 
-  // Keyboard-wedge listener for external USB/Bluetooth scanners.
-  // These devices "type" the decoded string fast; many do NOT send Enter,
-  // so we also auto-submit once input stops (idle), and accept Enter too.
+  // Handheld (keyboard-wedge) capture. On Android, hardware key events only
+  // reach a *focused input*, so we keep a hidden field focused and read from
+  // it. Many scanners send no Enter suffix, so we also auto-submit on idle.
+  const submitHw = () => {
+    clearTimeout(idleRef.current);
+    const el = hwInputRef.current;
+    const data = (el?.value || '').trim();
+    if (el) el.value = '';
+    setCaptured('');
+    if (data) processScan(data);
+  };
+
+  const onHwChange = (e) => {
+    setCaptured(e.target.value);
+    clearTimeout(idleRef.current);
+    idleRef.current = setTimeout(submitHw, 200);
+  };
+
+  const onHwKey = (e) => {
+    if (e.key === 'Enter' || e.key === 'Tab') { e.preventDefault(); submitHw(); }
+  };
+
+  // Keep the hidden capture field focused while in handheld-ready state
   useEffect(() => {
     if (scanState !== 'hardwareReady') return;
-
-    const submit = () => {
-      clearTimeout(idleRef.current);
-      const data = bufferRef.current.trim();
-      bufferRef.current = '';
-      setCaptured('');
-      if (data) processScan(data);
-    };
-
-    const onKey = (e) => {
-      const now = Date.now();
-      if (now - lastKeyRef.current > 500) bufferRef.current = ''; // drop stale partial
-      lastKeyRef.current = now;
-
-      if (e.key === 'Enter' || e.key === 'Tab') {
-        e.preventDefault();
-        submit();
-        return;
-      }
-      if (e.key.length === 1) {
-        bufferRef.current += e.key;
-        setCaptured(bufferRef.current);
-        clearTimeout(idleRef.current);
-        idleRef.current = setTimeout(submit, 200); // submit when the scan burst ends
-      }
-    };
-
-    window.addEventListener('keydown', onKey);
-    return () => { window.removeEventListener('keydown', onKey); clearTimeout(idleRef.current); };
-  }, [scanState, mealPeriod, mode]);
+    const t = setTimeout(() => hwInputRef.current?.focus(), 60);
+    return () => clearTimeout(t);
+  }, [scanState]);
 
   useEffect(() => () => { stopCamera(); clearTimeout(resetTimer.current); }, []);
 
@@ -221,7 +215,18 @@ export default function Scanner() {
           )}
 
           {scanState === 'hardwareReady' && (
-            <div className={styles.idleBox}>
+            <div className={styles.idleBox} onClick={() => hwInputRef.current?.focus()}>
+              {/* Hidden field that actually receives the scanner keystrokes */}
+              <input
+                ref={hwInputRef}
+                onChange={onHwChange}
+                onKeyDown={onHwKey}
+                onBlur={() => setTimeout(() => { if (scanState === 'hardwareReady') hwInputRef.current?.focus(); }, 80)}
+                inputMode="none"
+                autoComplete="off" autoCorrect="off" autoCapitalize="off" spellCheck={false}
+                aria-hidden
+                style={{ position: 'absolute', opacity: 0, height: 1, width: 1, left: -9999 }}
+              />
               <div className={styles.mealBadge}>{mealPeriod}</div>
               <div className={styles.scanIcon}>⌨</div>
               <h1 className={styles.h1}>Ready — Scan Pass</h1>
