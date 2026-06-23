@@ -15,13 +15,13 @@
   --line: #1a1a1a;
   --line2: #222;
   --w: #fff;
-  --ghi: #ccc;
-  --gmd: #8a8f98;
-  --glo: #4a4a4a;
+  --ghi: #fff;
+  --gmd: #fff;
+  --glo: #fff;
   --accent: #fff;
   --red: #ff4d4d;
   --green: #2de89f;
-  --mono: 'Courier New', ui-monospace, monospace;
+  --mono: 'D-DIN PRO', 'Inter', -apple-system, sans-serif;
   --font: 'D-DIN PRO', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 

@@ -5,15 +5,15 @@
 .loginBox { width: 100%; max-width: 360px; padding: 24px; }
 .loginEye {
   font-size: 9px; font-weight: 700; letter-spacing: .2em;
-  text-transform: uppercase; color: #888;
-  font-family: 'Courier New', monospace;
+  text-transform: uppercase; color: #fff;
+  font-family: var(--mono);
   margin-bottom: 24px;
 }
 .loginH1 {
   font-size: 36px; font-weight: 900; text-transform: uppercase;
   letter-spacing: -.02em; margin-bottom: 8px;
 }
-.loginSub { font-size: 12px; color: #888; margin-bottom: 32px; }
+.loginSub { font-size: 12px; color: #fff; margin-bottom: 32px; }
 .pinWrap { margin-bottom: 20px; }
 .pinInput {
   font-size: 24px !important; letter-spacing: .4em;
@@ -32,8 +32,8 @@
 }
 .hdrLeft { display: flex; align-items: center; gap: 12px; }
 .hdrTitle { font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
-.hdrSep { color: #333; }
-.hdrSub { font-size: 10px; color: #888; font-family: 'Courier New', monospace; }
+.hdrSep { color: #fff; }
+.hdrSub { font-size: 10px; color: #fff; font-family: var(--mono); }
 .hdrRight { display: flex; gap: 8px; }
 .refreshBtn { padding: 6px 14px !important; font-size: 10px !important; }
 
@@ -79,7 +79,7 @@
   font-size: 16px; font-weight: 900; text-transform: uppercase;
   letter-spacing: -.01em;
 }
-.sectionNote { font-size: 10px; color: #888; font-family: 'Courier New', monospace; }
+.sectionNote { font-size: 10px; color: #fff; font-family: var(--mono); }
 
 /* Scans table */
 .scanTable { display: flex; flex-direction: column; gap: 0; }
@@ -91,9 +91,9 @@
   align-items: center;
   font-size: 12px;
 }
-.scanTime { font-family: 'Courier New', monospace; color: #888; }
+.scanTime { font-family: var(--mono); color: #fff; }
 .scanName { font-weight: 600; }
-.scanUnit { color: #888; }
+.scanUnit { color: #fff; }
 .scanMeal { font-size: 9px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: #2d9; text-align: right; }
 
 /* Report */
@@ -103,10 +103,10 @@
 }
 .fg { display: flex; flex-direction: column; }
 .chartWrap { margin-bottom: 16px; }
-.reportTotal { font-size: 11px; color: #888; margin-bottom: 16px; font-family: 'Courier New', monospace; }
+.reportTotal { font-size: 11px; color: #fff; margin-bottom: 16px; font-family: var(--mono); }
 .reportTable { display: flex; flex-direction: column; gap: 6px; }
 .reportRow { display: flex; align-items: center; gap: 12px; }
-.reportDate { font-family: 'Courier New', monospace; font-size: 10px; color: #888; width: 80px; flex-shrink: 0; }
+.reportDate { font-family: var(--mono); font-size: 10px; color: #fff; width: 80px; flex-shrink: 0; }
 .reportBar { flex: 1; height: 6px; background: #111; overflow: hidden; }
 .reportBarFill { display: block; height: 100%; background: #fff; }
 .reportCount { font-size: 11px; font-weight: 700; width: 40px; text-align: right; }

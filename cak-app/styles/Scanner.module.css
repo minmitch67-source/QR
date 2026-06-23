@@ -9,7 +9,7 @@
   padding: 0 24px;
 }
 .hdrTitle { font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
-.hdrSite { font-size: 9px; font-family: 'Courier New', monospace; color: #888; letter-spacing: .1em; }
+.hdrSite { font-size: 9px; font-family: var(--mono); color: #fff; letter-spacing: .1em; }
 
 .body {
   min-height: 60vh;
@@ -18,7 +18,7 @@
 }
 
 .idleBox { text-align: center; max-width: 400px; width: 100%; }
-.scanIcon { font-size: 64px; color: #333; margin-bottom: 24px; }
+.scanIcon { font-size: 64px; color: #fff; margin-bottom: 24px; }
 .h1 {
   font-size: 28px; font-weight: 900; letter-spacing: -.02em;
   text-transform: uppercase; margin-bottom: 32px;
@@ -28,7 +28,7 @@
 .mealBtn {
   padding: 12px 24px;
   background: #111; border: 1px solid #222;
-  color: #888; font-size: 11px; font-weight: 700;
+  color: #fff; font-size: 11px; font-weight: 700;
   letter-spacing: .12em; text-transform: uppercase;
   cursor: pointer; transition: all .2s;
 }
@@ -37,7 +37,7 @@
 }
 .scanStartBtn { width: 100%; justify-content: center; margin-bottom: 16px; }
 .scanStartBtn:disabled { opacity: .3; cursor: not-allowed; }
-.hint { font-size: 10px; color: #444; font-family: 'Courier New', monospace; letter-spacing: .08em; }
+.hint { font-size: 10px; color: #fff; font-family: var(--mono); letter-spacing: .08em; }
 
 /* Camera */
 .cameraBox { width: 100%; max-width: 500px; text-align: center; }
@@ -65,7 +65,7 @@
 }
 
 .corner { position: absolute; width: 24px; height: 24px; }
-.scanHint { font-size: 11px; color: #666; margin-bottom: 20px; font-family: 'Courier New', monospace; }
+.scanHint { font-size: 11px; color: #fff; margin-bottom: 20px; font-family: var(--mono); }
 
 /* Result */
 .resultBox { text-align: center; max-width: 360px; width: 100%; }
@@ -84,13 +84,13 @@
   font-size: 28px; font-weight: 900; text-transform: uppercase;
   letter-spacing: -.01em; margin-bottom: 8px;
 }
-.resultUnit { font-size: 13px; color: #888; margin-bottom: 20px; }
+.resultUnit { font-size: 13px; color: #fff; margin-bottom: 20px; }
 .resultMeal {
   font-size: 11px; font-weight: 700; letter-spacing: .14em;
   text-transform: uppercase; color: #2d9; margin-bottom: 8px;
 }
-.resultCount { font-size: 10px; color: #555; font-family: 'Courier New', monospace; }
-.autoReset { font-size: 9px; color: #333; margin-top: 16px; font-family: 'Courier New', monospace; }
+.resultCount { font-size: 10px; color: #fff; font-family: var(--mono); }
+.autoReset { font-size: 9px; color: #fff; margin-top: 16px; font-family: var(--mono); }
 
 .spinner {
   width: 40px; height: 40px;

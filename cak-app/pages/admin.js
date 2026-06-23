@@ -182,7 +182,7 @@ export default function Admin() {
                     gap: 12, flexWrap: 'wrap', padding: '10px 0', borderBottom: '2px solid #2a2a2a',
                   }}>
                     <div style={{ fontSize: 15, fontWeight: 800, letterSpacing: '.02em' }}>
-                      {g.label} <span style={{ color: '#888', fontWeight: 600 }}>· {g.count} pending</span>
+                      {g.label} <span style={{ color: '#fff', fontWeight: 600 }}>· {g.count} pending</span>
                     </div>
                     <div style={{ display: 'flex', gap: 8 }}>
                       <button className="btn btn-g" onClick={() => copyS1Link(g)}>
@@ -308,7 +308,7 @@ function Stat({ label, val, color }) {
   return (
     <div style={{ textAlign:'center', padding: '16px 24px', borderRight: '1px solid #1a1a1a' }}>
       <div style={{ fontSize: 32, fontWeight: 900, color, lineHeight: 1 }}>{val}</div>
-      <div style={{ fontSize: 9, letterSpacing: '.16em', textTransform: 'uppercase', color: '#888', marginTop: 4, fontFamily:'Courier New,monospace' }}>{label}</div>
+      <div style={{ fontSize: 9, letterSpacing: '.16em', textTransform: 'uppercase', color: '#fff', marginTop: 4, fontFamily:'var(--mono)' }}>{label}</div>
     </div>
   );
 }
@@ -322,8 +322,8 @@ function SoldierCard({ soldier: s, children, loading }) {
     }}>
       <div>
         <div style={{ fontSize: 14, fontWeight: 700 }}>{s.rank} {s.lastName}, {s.firstName}</div>
-        <div style={{ fontSize: 11, color: '#888', marginTop: 2 }}>{s.unit} · {s.component} · {s.entitlement?.replace('_',' ')}</div>
-        <div style={{ fontSize: 10, color: '#555', marginTop: 2, fontFamily: 'Courier New,monospace' }}>
+        <div style={{ fontSize: 11, color: '#fff', marginTop: 2 }}>{s.unit} · {s.component} · {s.entitlement?.replace('_',' ')}</div>
+        <div style={{ fontSize: 10, color: '#fff', marginTop: 2, fontFamily: 'var(--mono)' }}>
           {s.startDate} → {s.endDate} · Meals served: {s.mealsServed}
         </div>
         <div style={{ marginTop: 4 }}>
@@ -336,7 +336,7 @@ function SoldierCard({ soldier: s, children, loading }) {
 }
 
 function Empty({ text }) {
-  return <div style={{ padding: '48px 0', textAlign: 'center', color: '#444', fontSize: 12, fontFamily: 'Courier New,monospace', letterSpacing: '.1em' }}>{text}</div>;
+  return <div style={{ padding: '48px 0', textAlign: 'center', color: '#fff', fontSize: 12, fontFamily: 'var(--mono)', letterSpacing: '.1em' }}>{text}</div>;
 }
 
 function BarChart({ data }) {
@@ -345,9 +345,9 @@ function BarChart({ data }) {
     <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, height: 120, padding: '0 0 8px' }}>
       {data.map(d => (
         <div key={d.date} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
-          <div style={{ fontSize: 9, color: '#888' }}>{d.count}</div>
+          <div style={{ fontSize: 9, color: '#fff' }}>{d.count}</div>
           <div style={{ width: '100%', background: '#fff', height: `${(d.count / max) * 80}px`, minHeight: d.count ? 2 : 0 }} />
-          <div style={{ fontSize: 8, color: '#555', fontFamily: 'Courier New,monospace', transform: 'rotate(-45deg)', transformOrigin: 'top left', whiteSpace: 'nowrap' }}>
+          <div style={{ fontSize: 8, color: '#fff', fontFamily: 'var(--mono)', transform: 'rotate(-45deg)', transformOrigin: 'top left', whiteSpace: 'nowrap' }}>
             {d.date.slice(5)}
           </div>
         </div>
