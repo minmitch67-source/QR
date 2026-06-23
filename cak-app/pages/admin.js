@@ -45,16 +45,21 @@ export default function Admin() {
 
   const login = async () => {
     setPinErr('');
-    const res = await fetch('/api/dashboard', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ pin, dateFrom, dateTo }),
-    });
-    if (res.status === 401) { setPinErr('Incorrect PIN'); return; }
-    const json = await res.json();
-    setData(json);
-    setStoredPin(pin);
-    setAuthed(true);
+    try {
+      const res = await fetch('/api/dashboard', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ pin, dateFrom, dateTo }),
+      });
+      if (res.status === 401) { setPinErr('Incorrect PIN'); return; }
+      if (!res.ok) { setPinErr('Server error — please try again'); return; }
+      const json = await res.json();
+      setData(json);
+      setStoredPin(pin);
+      setAuthed(true);
+    } catch {
+      setPinErr('Network error — please try again');
+    }
   };
 
   const approve = async (id, action) => {

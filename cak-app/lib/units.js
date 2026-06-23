@@ -4,7 +4,7 @@ import crypto from 'crypto';
 // Collapse free-text spelling/spacing/punctuation variants to one form.
 // "498CSSB", "498 cssb", "498-CSSB", "498 CSSB." -> "498 CSSB"
 function normalize(raw) {
-  return (raw || '')
+  return String(raw ?? '')
     .toUpperCase()
     .replace(/[._,]/g, ' ')            // punctuation -> space
     .replace(/[\/\\\-]/g, ' ')          // separators (/ \ -) -> space
