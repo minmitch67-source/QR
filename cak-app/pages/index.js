@@ -38,28 +38,6 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Cards */}
-        <section className={styles.cards}>
-          <div className={styles.card}>
-            <div className={styles.cardImgWrap}>
-              <img src="/container.png" alt="Containerized Autonomous Kitchen" className={styles.cardImg} />
-            </div>
-            <div className={styles.cardOverlay}>
-              <div className={styles.cardKick}>System</div>
-              <div className={styles.cardTitle}>Containerized Autonomous Kitchen</div>
-              <div className={styles.cardDesc}>Dual-line robotic galley — sustained autonomous meals at the point of need.</div>
-            </div>
-          </div>
-          <div className={styles.card}>
-            <div className={styles.cardImgWrap} style={{ background: 'radial-gradient(circle at 50% 40%, #14110c, #050505 70%)' }} />
-            <div className={styles.cardOverlay}>
-              <div className={styles.cardKick}>Platform</div>
-              <div className={styles.cardTitle}>Robotic Kitchen Platform</div>
-              <div className={styles.cardDesc}>~250 PAX/day throughput with QR-verified, unit-accountable meal logging.</div>
-            </div>
-          </div>
-        </section>
-
         {/* CTA */}
         <section className={styles.cta}>
           <div className={styles.ctaH}>Three taps to a meal pass</div>

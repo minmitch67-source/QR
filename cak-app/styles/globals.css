@@ -1,5 +1,13 @@
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
+/* Real SpaceX typeface — D-DIN PRO, self-hosted */
+@font-face { font-family: 'D-DIN PRO'; font-style: normal; font-weight: 400; font-display: swap; src: url('/fonts/D-DIN-PRO-400-Regular.woff2') format('woff2'); }
+@font-face { font-family: 'D-DIN PRO'; font-style: normal; font-weight: 500; font-display: swap; src: url('/fonts/D-DIN-PRO-500-Medium.woff2') format('woff2'); }
+@font-face { font-family: 'D-DIN PRO'; font-style: normal; font-weight: 600; font-display: swap; src: url('/fonts/D-DIN-PRO-600-SemiBold.woff2') format('woff2'); }
+@font-face { font-family: 'D-DIN PRO'; font-style: normal; font-weight: 700; font-display: swap; src: url('/fonts/D-DIN-PRO-700-Bold.woff2') format('woff2'); }
+@font-face { font-family: 'D-DIN PRO'; font-style: normal; font-weight: 800; font-display: swap; src: url('/fonts/D-DIN-PRO-800-ExtraBold.woff2') format('woff2'); }
+@font-face { font-family: 'D-DIN PRO'; font-style: normal; font-weight: 900; font-display: swap; src: url('/fonts/D-DIN-PRO-900-Heavy.woff2') format('woff2'); }
+
 :root {
   --bg: #000;
   --bg1: #0a0a0a;
@@ -14,7 +22,7 @@
   --red: #ff4d4d;
   --green: #2de89f;
   --mono: 'Courier New', ui-monospace, monospace;
-  --font: var(--font-ddin), 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font: 'D-DIN PRO', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 html, body {
