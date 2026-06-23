@@ -38,6 +38,7 @@
 .scanStartBtn { width: 100%; justify-content: center; margin-bottom: 16px; }
 .scanStartBtn:disabled { opacity: .3; cursor: not-allowed; }
 .hint { font-size: 10px; color: var(--gmd); font-family: var(--mono); letter-spacing: .08em; }
+.captured { margin-top: 18px; font-family: var(--mono); font-size: 11px; letter-spacing: .1em; color: var(--gmd); }
 
 /* Camera */
 .cameraBox { width: 100%; max-width: 500px; text-align: center; }

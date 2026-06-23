@@ -16,6 +16,7 @@ export default function Scanner() {
   const [mode, setMode] = useState('camera'); // camera | hardware
   const [result, setScanResult] = useState(null);
   const [errorMsg, setErrorMsg] = useState('');
+  const [captured, setCaptured] = useState('');
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const streamRef = useRef(null);
@@ -23,6 +24,7 @@ export default function Scanner() {
   const resetTimer = useRef(null);
   const bufferRef = useRef('');
   const lastKeyRef = useRef(0);
+  const idleRef = useRef(null);
 
   const startCamera = async () => {
     try {
@@ -124,29 +126,44 @@ export default function Scanner() {
     if (!mealPeriod) return;
     setMode('hardware');
     bufferRef.current = '';
+    setCaptured('');
     setScanState('hardwareReady');
   };
 
-  // Keyboard-wedge listener for external USB/Bluetooth QR scanners.
-  // These devices "type" the decoded string fast and send Enter.
+  // Keyboard-wedge listener for external USB/Bluetooth scanners.
+  // These devices "type" the decoded string fast; many do NOT send Enter,
+  // so we also auto-submit once input stops (idle), and accept Enter too.
   useEffect(() => {
     if (scanState !== 'hardwareReady') return;
+
+    const submit = () => {
+      clearTimeout(idleRef.current);
+      const data = bufferRef.current.trim();
+      bufferRef.current = '';
+      setCaptured('');
+      if (data) processScan(data);
+    };
+
     const onKey = (e) => {
       const now = Date.now();
-      // Clear stale partial input if there was a long pause before this key
-      if (now - lastKeyRef.current > 500) bufferRef.current = '';
+      if (now - lastKeyRef.current > 500) bufferRef.current = ''; // drop stale partial
       lastKeyRef.current = now;
-      if (e.key === 'Enter') {
-        const data = bufferRef.current.trim();
-        bufferRef.current = '';
-        if (data) processScan(data);
+
+      if (e.key === 'Enter' || e.key === 'Tab') {
         e.preventDefault();
+        submit();
         return;
       }
-      if (e.key.length === 1) bufferRef.current += e.key;
+      if (e.key.length === 1) {
+        bufferRef.current += e.key;
+        setCaptured(bufferRef.current);
+        clearTimeout(idleRef.current);
+        idleRef.current = setTimeout(submit, 200); // submit when the scan burst ends
+      }
     };
+
     window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
+    return () => { window.removeEventListener('keydown', onKey); clearTimeout(idleRef.current); };
   }, [scanState, mealPeriod, mode]);
 
   useEffect(() => () => { stopCamera(); clearTimeout(resetTimer.current); }, []);
@@ -208,7 +225,10 @@ export default function Scanner() {
               <div className={styles.mealBadge}>{mealPeriod}</div>
               <div className={styles.scanIcon}>⌨</div>
               <h1 className={styles.h1}>Ready — Scan Pass</h1>
-              <p className={styles.hint}>Pull the trigger on the handheld scanner to read a soldier&apos;s QR pass. Each scan logs automatically.</p>
+              <p className={styles.hint}>Scan a soldier&apos;s QR pass with the handheld reader. Each scan logs automatically.</p>
+              <div className={styles.captured}>
+                {captured ? `▣ receiving… ${captured.length} chars` : '○ waiting for scanner…'}
+              </div>
               <button className="btn btn-g" onClick={fullReset} style={{ marginTop: 24 }}>Change Meal / Cancel</button>
             </div>
           )}
