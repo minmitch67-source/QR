@@ -19,6 +19,8 @@ const COMPONENTS = ['U.S. Army','U.S. Navy','U.S. Marines','ROK Army','KATUSA','
 export default function Register() {
   const router = useRouter();
   const kiosk = 'kiosk' in router.query;
+  const staff = 'staff' in router.query;
+  const showSidebar = staff;
   const [step, setStep] = useState('form'); // form | success | error
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
@@ -96,7 +98,7 @@ export default function Register() {
       </Head>
 
       {kiosk && <KioskGuard />}
-      <Shell active="register" kiosk={kiosk}>
+      <Shell active="register" kiosk={!showSidebar}>
         {step === 'form' && (
           <>
             <section className={styles.hero}>

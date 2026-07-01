@@ -4,11 +4,11 @@ import s from '../styles/Shell.module.css';
 
 const NAV = [
   { section: 'Operations' },
-  { id: 'register', label: 'Register', icon: '＋', href: '/register' },
+  { id: 'register', label: 'Register', icon: '＋', href: '/register?staff=1' },
   { id: 'dashboard', label: 'Dashboard', icon: '▦', href: '/admin' },
   { id: 'approver', label: 'Approver Queue', icon: '▶', href: '/admin' },
   { section: 'Access' },
-  { id: 'qrpasses', label: 'QR Passes', icon: '◆', href: '/register' },
+  { id: 'qrpasses', label: 'QR Passes', icon: '◆', href: '/register?staff=1' },
   { id: 'scanner', label: 'Scanner', icon: '◎', href: '/scan' },
   { section: 'Data' },
   { id: 'reports', label: 'Reports', icon: '▤', href: '/admin' },
