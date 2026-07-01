@@ -95,6 +95,11 @@ export default function Register() {
       <Head>
         <title>C-AK Meal Pass — Register</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta property="og:title" content="Request a C-AK Meal Pass" />
+        <meta property="og:description" content="Register for a QR meal pass at the Containerized Autonomous Kitchen, Dogu Beach." />
+        <meta property="og:image" content="https://cak-meal-app.vercel.app/container.png" />
+        <meta property="og:url" content="https://cak-meal-app.vercel.app/register" />
+        <meta name="twitter:card" content="summary_large_image" />
       </Head>
 
       {kiosk && <KioskGuard />}
