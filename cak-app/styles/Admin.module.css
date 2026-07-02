@@ -21,6 +21,27 @@
 }
 .pinErr { font-size: 11px; color: #e53; margin-top: 8px; }
 
+.keypad {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.keypadBtn {
+  padding: 18px 0;
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(255,255,255,.14);
+  border-radius: 10px;
+  color: #fff;
+  font-size: 20px; font-weight: 700;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  transition: background .12s, border-color .12s;
+}
+.keypadBtn:hover { background: rgba(255,255,255,.1); border-color: rgba(255,255,255,.35); }
+.keypadBtn:active { transform: scale(.96); }
+
 /* Main layout */
 .page { min-height: 100vh; background: #000; display: flex; flex-direction: column; }
 

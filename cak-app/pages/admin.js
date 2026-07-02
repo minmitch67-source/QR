@@ -159,6 +159,28 @@ export default function Admin() {
               />
               {pinErr && <p className={styles.pinErr}>{pinErr}</p>}
             </div>
+
+            <div className={styles.keypad}>
+              {['1','2','3','4','5','6','7','8','9'].map(d => (
+                <button
+                  key={d} type="button" className={styles.keypadBtn}
+                  onClick={() => setPin(p => p + d)}
+                >{d}</button>
+              ))}
+              <button
+                type="button" className={styles.keypadBtn}
+                onClick={() => setPin(p => p.slice(0, -1))}
+              >&larr;</button>
+              <button
+                key="0" type="button" className={styles.keypadBtn}
+                onClick={() => setPin(p => p + '0')}
+              >0</button>
+              <button
+                type="button" className={styles.keypadBtn}
+                onClick={() => setPin('')}
+              >Clear</button>
+            </div>
+
             <button className="btn btn-p btn-block btn-lg" onClick={login}>Enter →</button>
           </div>
         </div>
