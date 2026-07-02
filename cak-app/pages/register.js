@@ -3,6 +3,7 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import Shell from '../components/Shell';
 import KioskGuard from '../components/KioskGuard';
+import InstallPrompt from '../components/InstallPrompt';
 import styles from '../styles/Register.module.css';
 
 const RANKS = [
@@ -103,6 +104,7 @@ export default function Register() {
       </Head>
 
       {kiosk && <KioskGuard />}
+      {!showSidebar && <InstallPrompt />}
       <Shell active="register" kiosk={!showSidebar}>
         {step === 'form' && (
           <>

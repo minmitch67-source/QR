@@ -1,7 +1,7 @@
 {
   "name": "C-AK Meal Pass",
   "short_name": "C-AK",
-  "start_url": "/",
+  "start_url": "/register",
   "display": "standalone",
   "orientation": "any",
   "background_color": "#000000",
