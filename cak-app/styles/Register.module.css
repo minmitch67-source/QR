@@ -35,7 +35,9 @@
   border-bottom: 1px solid var(--line);
   background: #000;
 }
-@media (max-width: 600px) { .hero { padding: 0 22px 36px; min-height: 46vh; } }
+@media (max-width: 600px) {
+  .hero { padding: 28px 22px 28px; min-height: 0; align-items: flex-start; }
+}
 
 .heroGlow { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(820px 540px at 72% 40%, rgba(96,124,162,.20), transparent 60%); }
 .heroImg {
@@ -46,7 +48,10 @@
   mask-image: linear-gradient(to left, #000 46%, transparent 86%);
 }
 .heroShade { position: absolute; inset: 0; pointer-events: none; background: linear-gradient(to right, #000 2%, rgba(0,0,0,.55) 34%, transparent 62%), linear-gradient(to top, #000 0%, transparent 30%); }
-@media (max-width: 900px) { .heroImg { width: 150%; right: -28%; top: 36%; opacity: .4; } }
+@media (max-width: 600px) {
+  .heroImg { width: 92%; right: -18%; top: auto; bottom: -8%; transform: none; opacity: .22; }
+  .heroShade { background: linear-gradient(to top, #000 0%, rgba(0,0,0,.4) 40%, transparent 75%); }
+}
 .heroInner { position: relative; max-width: 560px; }
 
 .eyebrow {
@@ -56,6 +61,7 @@
   display: flex; align-items: center; gap: 12px;
 }
 .eyebrow::before { content: ''; display: inline-block; width: 30px; height: 1px; background: #666; }
+@media (max-width: 600px) { .eyebrow { margin-bottom: 14px; } }
 
 .h1 {
   font-size: clamp(40px, 7vw, 80px);
@@ -64,6 +70,7 @@
   margin-bottom: 22px;
 }
 .h1 em { font-style: normal; color: #fff; }
+@media (max-width: 600px) { .h1 { font-size: 46px; margin-bottom: 16px; } }
 .lead { font-size: 14px; color: var(--ghi); line-height: 1.7; max-width: 420px; }
 
 .form {
