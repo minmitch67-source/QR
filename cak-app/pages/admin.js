@@ -402,6 +402,9 @@ function Stat({ label, val, color }) {
 }
 
 function SoldierCard({ soldier: s, children, loading }) {
+  const registered = s.createdAt ? new Date(s.createdAt).toLocaleString('en-US', {
+    month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit',
+  }) : null;
   return (
     <div style={{
       borderBottom: '1px solid #1a1a1a', padding: '16px 0',
@@ -414,8 +417,16 @@ function SoldierCard({ soldier: s, children, loading }) {
         <div style={{ fontSize: 10, color: 'var(--gmd)', marginTop: 2, fontFamily: 'var(--mono)' }}>
           {s.startDate} → {s.endDate} · Meals served: {s.mealsServed}
         </div>
-        <div style={{ marginTop: 4 }}>
+        {registered && (
+          <div style={{ fontSize: 10, color: 'var(--gmd)', marginTop: 2, fontFamily: 'var(--mono)' }}>
+            Registered {registered}
+          </div>
+        )}
+        <div style={{ marginTop: 4, display: 'flex', gap: 6 }}>
           <span className={`tag tag-${s.status}`}>{s.status}</span>
+          {s.demo === '1' && (
+            <span className="tag" style={{ background: 'rgba(150,150,255,.14)', color: '#9aa3ff' }}>demo</span>
+          )}
         </div>
       </div>
       {children && <div style={{ display: 'flex', gap: 8 }}>{children}</div>}
