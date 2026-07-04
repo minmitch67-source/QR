@@ -17,6 +17,7 @@ export default function Scanner() {
   const [result, setScanResult] = useState(null);
   const [errorMsg, setErrorMsg] = useState('');
   const [captured, setCaptured] = useState('');
+  const [registerQr, setRegisterQr] = useState('');
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const streamRef = useRef(null);
@@ -104,8 +105,15 @@ export default function Scanner() {
     clearTimeout(resetTimer.current);
     setScanResult(null);
     setErrorMsg('');
-    // In hardware mode, return to the ready screen so scanning continues
-    setScanState(mode === 'hardware' ? 'hardwareReady' : 'idle');
+    if (mode === 'hardware') {
+      // Return to the ready screen so handheld scanning continues
+      setScanState('hardwareReady');
+    } else {
+      // Reopen the camera automatically so the next soldier can scan
+      // without anyone touching the tablet
+      setScanState('scanning');
+      startCamera();
+    }
   };
 
   const fullReset = () => {
@@ -162,6 +170,17 @@ export default function Scanner() {
 
   useEffect(() => () => { stopCamera(); clearTimeout(resetTimer.current); }, []);
 
+  // Generate a QR to the public register page so soldiers without a pass
+  // yet can sign up on their own phone right from the kiosk screen
+  useEffect(() => {
+    (async () => {
+      const QRCode = (await import('qrcode')).default;
+      const url = `${window.location.origin}/register`;
+      const data = await QRCode.toDataURL(url, { width: 240, margin: 1 });
+      setRegisterQr(data);
+    })();
+  }, []);
+
   return (
     <>
       <Head>
@@ -184,7 +203,7 @@ export default function Scanner() {
           {scanState === 'idle' && (
             <div className={styles.idleBox}>
               <div className={styles.scanIcon}>⬡</div>
-              <h1 className={styles.h1}>Select Meal Period</h1>
+              <h1 className={styles.h1}>Scan Your Meal Pass Here</h1>
               <div className={styles.mealBtns}>
                 {MEAL_PERIODS.map(m => (
                   <button
@@ -211,6 +230,17 @@ export default function Scanner() {
                 ⌨ Handheld Scanner →
               </button>
               <p className={styles.hint}>Pick a meal period, then choose camera or a plugged-in handheld scanner</p>
+
+              <div className={styles.altDivider}><span>Don&apos;t have a pass yet?</span></div>
+
+              <div className={styles.noPassBox}>
+                {registerQr && <img src={registerQr} alt="Scan to register" className={styles.registerQr} />}
+                <p className={styles.noPassText}>
+                  Scan this code with <b>your own phone</b> to request a meal pass.
+                  Your unit S1 or Food Service NCO must approve it before it works here —
+                  until then, tell your Food Service NCO so your meal can be logged manually.
+                </p>
+              </div>
             </div>
           )}
 
@@ -251,7 +281,7 @@ export default function Scanner() {
                 <div className={styles.corner} style={{ bottom: 20, right: 20, borderBottom: '3px solid #fff', borderRight: '3px solid #fff' }} />
               </div>
               <p className={styles.scanHint}>Hold QR code steady in frame</p>
-              <button className="btn btn-g" onClick={() => { stopCamera(); reset(); }}>Cancel</button>
+              <button className="btn btn-g" onClick={() => { stopCamera(); fullReset(); }}>Cancel</button>
             </div>
           )}
 
