@@ -16,7 +16,7 @@ export default async function handler(req, res) {
 
   const soldier = {
     id, lastName, firstName, rank, unit, component,
-    site: site || 'C-AK / Dogu Beach',
+    site: site || 'C-AK / Recon Base',
     startDate, endDate,
     meals: JSON.stringify(meals || []),
     entitlement, notes: notes || '',

@@ -27,7 +27,7 @@ export default function Home() {
             </h1>
             <p className={styles.lead}>
               Request a QR meal pass for the Containerized Autonomous Kitchen at
-              Dogu Beach, Pohang. Passes are issued after your unit S1 or Food
+              Recon Base. Passes are issued after your unit S1 or Food
               Service NCO approval.
             </p>
             <div className={styles.heroBtns}>
@@ -48,7 +48,7 @@ export default function Home() {
           </div>
         </section>
 
-        <footer className={styles.foot}>19th ESC · CJLOTS 2026 · Dogu Beach, Pohang · For official use during exercise</footer>
+        <footer className={styles.foot}>19th ESC · CJLOTS 2026 · Recon Base · For official use during exercise</footer>
       </Shell>
     </>
   );

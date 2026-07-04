@@ -68,7 +68,7 @@ export default async function handler(req, res) {
       const id = `demo-${uuidv4()}`;
       const soldier = {
         id, ...s,
-        site: 'C-AK / Dogu Beach',
+        site: 'C-AK / Recon Base',
         startDate: today, endDate: dayKey(-3),
         meals: JSON.stringify(['Breakfast', 'Lunch', 'Dinner']),
         notes: 'DEMO RECORD',

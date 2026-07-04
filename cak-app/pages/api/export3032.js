@@ -87,7 +87,7 @@ export default async function handler(req, res) {
       out.addPage(front); out.addPage(back);
 
       // Front header
-      T(front, 'C-AK / DOGU BEACH', 50, 700, 9);
+      T(front, 'C-AK / RECON BASE', 50, 700, 9);
       T(front, ymd, 423, 700, 10);
       if (MEAL_Y[meal]) T(front, 'X', 65, MEAL_Y[meal], 10, bold);
       T(front, cfg.code, 235, 665, 11, bold);

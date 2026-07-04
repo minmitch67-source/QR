@@ -28,12 +28,11 @@ export default function Shell({ active, actions, children, kiosk }) {
           </div>
           <div style={{ minWidth: 0 }}>
             <div className={s.tbTitle}>19th ESC // C-AK Meal Accountability</div>
-            <div className={s.tbSub}>Camp Henry, Daegu · Prototype v1.0 · Not an official Army form</div>
           </div>
         </div>
         <div className={s.tbRight}>
           {actions}
-          <span className={s.tbSite}>Site: <b>C-AK / Dogu Beach</b></span>
+          <span className={s.tbSite}>Site: <b>C-AK / Recon Base</b></span>
           <Clock />
         </div>
       </header>
