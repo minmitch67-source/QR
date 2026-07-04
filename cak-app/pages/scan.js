@@ -201,7 +201,7 @@ export default function Scanner() {
 
       {kiosk && <KioskGuard />}
       <Shell active="scanner" kiosk={kiosk}>
-        {(scanState === 'idle' || scanState === 'hardwareReady') && (
+        {!kiosk && (scanState === 'idle' || scanState === 'hardwareReady') && (
           <Hero
             short
             eyebrow="19th ESC · Containerized Autonomous Kitchen"
@@ -212,70 +212,63 @@ export default function Scanner() {
         <div className={styles.body}>
 
           {scanState === 'idle' && (
-            <div className={styles.idleBox}>
-              <div className={styles.scanIcon}>⬡</div>
-              <h1 className={styles.h1}>Scan Your Meal Pass Here</h1>
-              <div className={styles.mealBtns}>
-                {MEAL_PERIODS.map(m => (
-                  <button
-                    key={m}
-                    className={`${styles.mealBtn} ${mealPeriod === m ? styles.mealBtnActive : ''}`}
-                    onClick={() => setMealPeriod(m)}
-                  >
-                    {m}
-                  </button>
-                ))}
+            <div className={styles.kioskRow}>
+              <div className={styles.idleBox}>
+                <h1 className={styles.h1}>Scan Your Meal Pass Here</h1>
+                <div className={styles.mealBtns}>
+                  {MEAL_PERIODS.map(m => (
+                    <button
+                      key={m}
+                      className={`${styles.mealBtn} ${mealPeriod === m ? styles.mealBtnActive : ''}`}
+                      onClick={() => setMealPeriod(m)}
+                    >
+                      {m}
+                    </button>
+                  ))}
+                </div>
+                <button
+                  className={`btn btn-p btn-lg ${styles.scanStartBtn}`}
+                  onClick={beginScan}
+                  disabled={!mealPeriod}
+                >
+                  📷 Camera Scan →
+                </button>
+                <button
+                  className={`btn btn-g btn-lg ${styles.scanStartBtn}`}
+                  onClick={beginHardware}
+                  disabled={!mealPeriod}
+                >
+                  ⌨ Handheld Scanner →
+                </button>
+                <p className={styles.hint}>Pick a meal period, then choose camera or a plugged-in handheld scanner</p>
               </div>
-              <button
-                className={`btn btn-p btn-lg ${styles.scanStartBtn}`}
-                onClick={beginScan}
-                disabled={!mealPeriod}
-              >
-                📷 Camera Scan →
-              </button>
-              <button
-                className={`btn btn-g btn-lg ${styles.scanStartBtn}`}
-                onClick={beginHardware}
-                disabled={!mealPeriod}
-              >
-                ⌨ Handheld Scanner →
-              </button>
-              <p className={styles.hint}>Pick a meal period, then choose camera or a plugged-in handheld scanner</p>
-
-              <div className={styles.altDivider}><span>Don&apos;t have a pass yet?</span></div>
-
-              <div className={styles.noPassBox}>
-                {registerQr && <img src={registerQr} alt="Scan to register" className={styles.registerQr} />}
-                <p className={styles.noPassText}>
-                  <b>Sign in on the paper roster</b> to the right of this tablet for this meal.
-                  Then scan this code with your own phone to request a QR pass for next time —
-                  your unit S1 or Food Service NCO must approve it first.
-                </p>
-              </div>
+              <NoPassPanel registerQr={registerQr} />
             </div>
           )}
 
           {scanState === 'hardwareReady' && (
-            <div className={styles.idleBox} onClick={() => hwInputRef.current?.focus()}>
-              {/* Hidden field that actually receives the scanner keystrokes */}
-              <input
-                ref={hwInputRef}
-                onChange={onHwChange}
-                onKeyDown={onHwKey}
-                onBlur={() => setTimeout(() => { if (scanState === 'hardwareReady') hwInputRef.current?.focus(); }, 80)}
-                inputMode="none"
-                autoComplete="off" autoCorrect="off" autoCapitalize="off" spellCheck={false}
-                aria-hidden
-                style={{ position: 'absolute', opacity: 0, height: 1, width: 1, left: -9999 }}
-              />
-              <div className={styles.mealBadge}>{mealPeriod}</div>
-              <div className={styles.scanIcon}>⌨</div>
-              <h1 className={styles.h1}>Ready — Scan Pass</h1>
-              <p className={styles.hint}>Scan a soldier&apos;s QR pass with the handheld reader. Each scan logs automatically.</p>
-              <div className={styles.captured}>
-                {captured ? `▣ receiving… ${captured.length} chars` : '○ waiting for scanner…'}
+            <div className={styles.kioskRow}>
+              <div className={styles.idleBox} onClick={() => hwInputRef.current?.focus()}>
+                {/* Hidden field that actually receives the scanner keystrokes */}
+                <input
+                  ref={hwInputRef}
+                  onChange={onHwChange}
+                  onKeyDown={onHwKey}
+                  onBlur={() => setTimeout(() => { if (scanState === 'hardwareReady') hwInputRef.current?.focus(); }, 80)}
+                  inputMode="none"
+                  autoComplete="off" autoCorrect="off" autoCapitalize="off" spellCheck={false}
+                  aria-hidden
+                  style={{ position: 'absolute', opacity: 0, height: 1, width: 1, left: -9999 }}
+                />
+                <div className={styles.mealBadge}>{mealPeriod}</div>
+                <h1 className={styles.h1}>Ready — Scan Pass</h1>
+                <p className={styles.hint}>Scan a soldier&apos;s QR pass with the handheld reader.</p>
+                <div className={styles.captured}>
+                  {captured ? `▣ receiving… ${captured.length} chars` : '○ waiting for scanner…'}
+                </div>
+                <button className="btn btn-g" onClick={fullReset} style={{ marginTop: 24 }}>Change Meal / Cancel</button>
               </div>
-              <button className="btn btn-g" onClick={fullReset} style={{ marginTop: 24 }}>Change Meal / Cancel</button>
+              <NoPassPanel registerQr={registerQr} />
             </div>
           )}
 
@@ -345,5 +338,21 @@ export default function Scanner() {
         </div>
       </Shell>
     </>
+  );
+}
+
+function NoPassPanel({ registerQr }) {
+  return (
+    <div className={styles.noPassPanel}>
+      <div className={styles.noPassEyebrow}>No Pass Yet?</div>
+      {registerQr && <img src={registerQr} alt="Scan to register" className={styles.registerQr} />}
+      <p className={styles.noPassText}>
+        <b>Sign in on the paper roster</b> to the right of this tablet for this meal.
+      </p>
+      <p className={styles.noPassText}>
+        Scan this code with your own phone to request a QR pass for next time —
+        your unit S1 or Food Service NCO must approve it first.
+      </p>
+    </div>
   );
 }
