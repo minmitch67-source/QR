@@ -5,15 +5,14 @@ import s from '../styles/Shell.module.css';
 const NAV = [
   { section: 'Operations' },
   { id: 'register', label: 'Register', icon: '＋', href: '/register?staff=1' },
-  { id: 'dashboard', label: 'Dashboard', icon: '▦', href: '/admin' },
-  { id: 'approver', label: 'Approver Queue', icon: '▶', href: '/admin' },
+  { id: 'approver', label: 'Approver Queue', icon: '▶', href: '/admin?tab=pending' },
   { section: 'Access' },
-  { id: 'qrpasses', label: 'QR Passes', icon: '◆', href: '/register?staff=1' },
+  { id: 'qrpasses', label: 'QR Passes', icon: '◆', href: '/admin?tab=approved' },
   { id: 'scanner', label: 'Scanner', icon: '◎', href: '/scan' },
   { section: 'Data' },
-  { id: 'reports', label: 'Reports', icon: '▤', href: '/admin' },
+  { id: 'reports', label: 'Reports', icon: '▤', href: '/admin?tab=report' },
   { section: 'System' },
-  { id: 'settings', label: 'Settings', icon: '⚙', href: '/admin' },
+  { id: 'settings', label: 'Settings', icon: '⚙', href: '/admin?tab=settings' },
 ];
 
 export default function Shell({ active, actions, children, kiosk }) {

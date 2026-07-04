@@ -1,10 +1,15 @@
 import { useState, useEffect, useCallback } from 'react';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 import Shell from '../components/Shell';
 import Hero from '../components/Hero';
 import styles from '../styles/Admin.module.css';
 
+const TABS = ['pending', 'approved', 'denied', 'scans', 'report', 'demo', 'settings'];
+const NAV_FOR_TAB = { pending: 'approver', approved: 'qrpasses', denied: 'approver', scans: 'approver', report: 'reports', demo: 'approver', settings: 'settings' };
+
 export default function Admin() {
+  const router = useRouter();
   const [authed, setAuthed] = useState(false);
   const [pin, setPin] = useState('');
   const [pinErr, setPinErr] = useState('');
@@ -18,6 +23,19 @@ export default function Admin() {
   const [copied, setCopied] = useState('');
 
   function today() { return new Date().toISOString().slice(0, 10); }
+
+  // Deep-link the active tab so sidebar links (Reports, QR Passes, Settings)
+  // actually land on the section they claim to, and the URL is shareable
+  useEffect(() => {
+    if (!router.isReady) return;
+    const q = router.query.tab;
+    if (q && TABS.includes(q) && q !== tab) setTab(q);
+  }, [router.isReady, router.query.tab]);
+
+  const goToTab = (t) => {
+    setTab(t);
+    router.push(`/admin?tab=${t}`, undefined, { shallow: true });
+  };
 
   const fetchData = useCallback(async (p = storedPin) => {
     if (!p) return;
@@ -91,6 +109,14 @@ export default function Admin() {
     try { await navigator.clipboard.writeText(url); }
     catch { window.prompt('Copy this S1 approval link:', url); }
     setCopied(g.unitKey);
+    setTimeout(() => setCopied(''), 2000);
+  };
+
+  const copyLink = async (path) => {
+    const url = `${window.location.origin}${path}`;
+    try { await navigator.clipboard.writeText(url); }
+    catch { window.prompt('Copy this link:', url); }
+    setCopied(path);
     setTimeout(() => setCopied(''), 2000);
   };
 
@@ -193,7 +219,7 @@ export default function Admin() {
   return (
     <>
       <Head><title>C-AK Admin Dashboard</title></Head>
-      <Shell active="dashboard" actions={
+      <Shell active={NAV_FOR_TAB[tab] || 'approver'} actions={
         <>
           <button className="btn btn-g" onClick={() => fetchData()}>{loading ? '…' : '↻'} Refresh</button>
           <button className="btn btn-g" onClick={() => setAuthed(false)}>Lock</button>
@@ -216,8 +242,8 @@ export default function Admin() {
 
         {/* Tab nav */}
         <nav className={styles.tabs}>
-          {['pending','approved','denied','scans','report','demo'].map(t => (
-            <button key={t} className={`${styles.tab} ${tab === t ? styles.tabActive : ''}`} onClick={() => setTab(t)}>
+          {TABS.map(t => (
+            <button key={t} className={`${styles.tab} ${tab === t ? styles.tabActive : ''}`} onClick={() => goToTab(t)}>
               {t === 'pending' ? `Pending (${counts.pending ?? 0})` : t.charAt(0).toUpperCase() + t.slice(1)}
             </button>
           ))}
@@ -383,6 +409,50 @@ export default function Admin() {
               <p style={{ color: 'var(--gmd)', fontFamily: 'var(--mono)', fontSize: 10, letterSpacing: '.08em', marginTop: 20 }}>
                 Tip: after loading, open the Pending tab to show grouping &amp; S1 links, then Scans and Report.
               </p>
+            </div>
+          )}
+
+          {/* SETTINGS */}
+          {tab === 'settings' && (
+            <div>
+              <div className={styles.sectionHdr}>
+                <h2 className={styles.sectionH2}>Settings</h2>
+              </div>
+
+              <div style={{ marginBottom: 28 }}>
+                <div className={styles.sectionNote} style={{ marginBottom: 8 }}>Site</div>
+                <div style={{ fontSize: 14, fontWeight: 700 }}>C-AK / Recon Base</div>
+              </div>
+
+              <div style={{ marginBottom: 28 }}>
+                <div className={styles.sectionNote} style={{ marginBottom: 8 }}>Admin PIN</div>
+                <p style={{ fontSize: 12, color: 'var(--ghi)', lineHeight: 1.7, maxWidth: 520 }}>
+                  Set via the <code>ADMIN_PIN</code> environment variable in the Vercel project
+                  (Settings → Environment Variables). Defaults to <strong>3032</strong> if unset.
+                </p>
+              </div>
+
+              <div>
+                <div className={styles.sectionNote} style={{ marginBottom: 12 }}>Kiosk Links</div>
+                {[
+                  { label: 'Register — public sign-up link (share with soldiers)', path: '/register' },
+                  { label: 'Register — kiosk mode (no sidebar, PIN-locked exit)', path: '/register?kiosk=1' },
+                  { label: 'Scanner — kiosk mode (no sidebar, PIN-locked exit)', path: '/scan?kiosk=1' },
+                ].map(l => (
+                  <div key={l.path} style={{
+                    display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                    gap: 12, flexWrap: 'wrap', padding: '12px 0', borderBottom: '1px solid #1a1a1a',
+                  }}>
+                    <div>
+                      <div style={{ fontSize: 12, fontWeight: 700 }}>{l.label}</div>
+                      <div style={{ fontSize: 11, color: 'var(--gmd)', fontFamily: 'var(--mono)', marginTop: 2 }}>{l.path}</div>
+                    </div>
+                    <button className="btn btn-g" onClick={() => copyLink(l.path)}>
+                      {copied === l.path ? '✓ Copied' : 'Copy Link'}
+                    </button>
+                  </div>
+                ))}
+              </div>
             </div>
           )}
 
