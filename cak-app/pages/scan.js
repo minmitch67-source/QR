@@ -8,6 +8,15 @@ import styles from '../styles/Scanner.module.css';
 
 const MEAL_PERIODS = ['Breakfast', 'Lunch', 'Dinner'];
 
+const THANKS = [
+  'Enjoy your meal!',
+  "Chow's on us — enjoy!",
+  'Bon appétit, soldier!',
+  'Fuel up and drive on!',
+  'You\'re all set — dig in!',
+  'Logged. Go get some!',
+];
+
 export default function Scanner() {
   const router = useRouter();
   const kiosk = 'kiosk' in router.query;
@@ -18,6 +27,7 @@ export default function Scanner() {
   const [errorMsg, setErrorMsg] = useState('');
   const [captured, setCaptured] = useState('');
   const [registerQr, setRegisterQr] = useState('');
+  const [thanks, setThanks] = useState(THANKS[0]);
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const streamRef = useRef(null);
@@ -92,6 +102,7 @@ export default function Scanner() {
       if (res.status === 403) { setScanState('notapproved'); setErrorMsg(data.error); return; }
       if (!res.ok) throw new Error(data.error);
       setScanResult(data.soldier);
+      setThanks(THANKS[Math.floor(Math.random() * THANKS.length)]);
       setScanState('success');
     } catch (e) {
       setErrorMsg(e.message);
@@ -236,9 +247,9 @@ export default function Scanner() {
               <div className={styles.noPassBox}>
                 {registerQr && <img src={registerQr} alt="Scan to register" className={styles.registerQr} />}
                 <p className={styles.noPassText}>
-                  Scan this code with <b>your own phone</b> to request a meal pass.
-                  Your unit S1 or Food Service NCO must approve it before it works here —
-                  until then, tell your Food Service NCO so your meal can be logged manually.
+                  <b>Sign in on the paper roster</b> to the right of this tablet for this meal.
+                  Then scan this code with your own phone to request a QR pass for next time —
+                  your unit S1 or Food Service NCO must approve it first.
                 </p>
               </div>
             </div>
@@ -295,11 +306,12 @@ export default function Scanner() {
           {scanState === 'success' && result && (
             <div className={styles.resultBox}>
               <div className={`${styles.resultIcon} ${styles.ok}`}>✓</div>
-              <h2 className={styles.resultName}>{result.rank} {result.lastName}</h2>
+              <h2 className={styles.resultName}>Thanks, {result.rank} {result.lastName}!</h2>
               <p className={styles.resultUnit}>{result.firstName} · {result.unit}</p>
               <div className={styles.resultMeal}>{mealPeriod} — Meal Logged</div>
+              <p className={styles.resultThanks}>{thanks}</p>
               <div className={styles.resultCount}>Total meals served: {result.mealsServed}</div>
-              <div className={styles.autoReset}>Resetting in 5s…</div>
+              <div className={styles.autoReset}>Next soldier can scan in 5s…</div>
             </div>
           )}
 

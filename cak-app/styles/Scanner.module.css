@@ -107,6 +107,7 @@
   font-size: 11px; font-weight: 700; letter-spacing: .14em;
   text-transform: uppercase; color: #2d9; margin-bottom: 8px;
 }
+.resultThanks { font-size: 15px; color: #fff; margin-bottom: 16px; }
 .resultCount { font-size: 10px; color: var(--gmd); font-family: var(--mono); }
 .autoReset { font-size: 9px; color: var(--gmd); margin-top: 16px; font-family: var(--mono); }
 
