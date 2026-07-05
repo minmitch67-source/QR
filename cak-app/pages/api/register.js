@@ -25,8 +25,16 @@ export default async function handler(req, res) {
     mealsServed: '0',
   };
 
-  // Generate QR code data URI
-  const qrData = JSON.stringify({ id, rank, lastName, firstName, unit });
+  // Generate QR code data URI. Encode only the bare id — every other field
+  // (rank/name/unit) is looked up server-side from `soldier:${id}` on scan,
+  // so it doesn't need to ride in the QR itself. A ~36-char UUID needs a much
+  // lower QR version (fewer/larger modules) than the old JSON blob, which
+  // matters a lot when a fixed-mount imager is reading it off a glossy phone
+  // screen instead of print. It also has no JSON punctuation (`{`, `"`, `:`)
+  // for a keyboard-wedge scanner to garble under a mismatched keyboard layout
+  // — just hex digits and hyphens, the same charset parsePassId's regex
+  // fallback already expects.
+  const qrData = id;
   // margin: 4 is the QR spec's minimum quiet zone — undersizing it (e.g. margin: 1)
   // reads fine with a phone camera but is unreliable on fixed-mount imagers,
   // especially scanning off a glossy screen instead of print.
