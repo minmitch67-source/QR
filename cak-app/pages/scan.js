@@ -4,7 +4,11 @@ import { useRouter } from 'next/router';
 import Shell from '../components/Shell';
 import Hero from '../components/Hero';
 import KioskGuard from '../components/KioskGuard';
+import { parsePassId } from '../lib/qrParse';
+import { loadRoster, saveRoster, loadQueue, saveQueue } from '../lib/offlineScan';
 import styles from '../styles/Scanner.module.css';
+
+const SYNC_INTERVAL_MS = 45000;
 
 const MEAL_PERIODS = ['Breakfast', 'Lunch', 'Dinner'];
 
@@ -29,6 +33,11 @@ export default function Scanner() {
   const [captured, setCaptured] = useState('');
   const [registerQr, setRegisterQr] = useState('');
   const [thanks, setThanks] = useState(THANKS[0]);
+  const [roster, setRoster] = useState(null);
+  const [queue, setQueue] = useState([]);
+  const [isOffline, setIsOffline] = useState(false);
+  const [offlineResult, setOfflineResult] = useState(false);
+  const [syncMsg, setSyncMsg] = useState('');
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const streamRef = useRef(null);
@@ -37,6 +46,7 @@ export default function Scanner() {
   const bufferRef = useRef('');
   const lastKeyRef = useRef(0);
   const idleRef = useRef(null);
+  const syncingRef = useRef(false);
   const hwInputRef = useRef(null);
 
   const startCamera = async () => {
@@ -93,12 +103,26 @@ export default function Scanner() {
   const processScan = async (qrData) => {
     setScanState('processing');
     setLastRaw(qrData);
+    setOfflineResult(false);
+
+    let res;
     try {
-      const res = await fetch('/api/scan', {
+      res = await fetch('/api/scan', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ qrData, mealPeriod }),
       });
+    } catch {
+      // The fetch itself never completed — genuine network failure, not the
+      // server rejecting the scan. Fall back to the last synced roster.
+      setIsOffline(true);
+      processScanOffline(qrData);
+      resetTimer.current = setTimeout(reset, mode === 'hardware' ? 2500 : 5000);
+      return;
+    }
+
+    setIsOffline(false);
+    try {
       const data = await res.json();
       if (res.status === 409) { setScanState('duplicate'); return; }
       if (res.status === 403) { setScanState('notapproved'); setErrorMsg(data.error); return; }
@@ -106,12 +130,103 @@ export default function Scanner() {
       setScanResult(data.soldier);
       setThanks(THANKS[Math.floor(Math.random() * THANKS.length)]);
       setScanState('success');
+      refreshRoster();
     } catch (e) {
       setErrorMsg(e.message);
       setScanState('error');
     }
     // Auto-reset (faster in hardware mode to keep a chow line moving)
     resetTimer.current = setTimeout(reset, mode === 'hardware' ? 2500 : 5000);
+  };
+
+  // Falls back to the last-synced roster snapshot when /api/scan is
+  // unreachable. Queues the scan locally (with its real timestamp) to sync
+  // once connectivity returns.
+  const processScanOffline = (qrData) => {
+    const id = parsePassId(qrData);
+    const r = loadRoster();
+
+    if (!id || !r) {
+      setErrorMsg('Offline and no cached roster available to verify this pass.');
+      setScanState('error');
+      return;
+    }
+    const soldier = r.approved.find(s => s.id === id);
+    if (!soldier) {
+      setErrorMsg("Offline — this pass isn't in the last synced roster.");
+      setScanState('error');
+      return;
+    }
+
+    const q = loadQueue();
+    const alreadyServed = r.todayScans.some(s => s.soldierId === id && s.mealPeriod === mealPeriod)
+      || q.some(s => s.id === id && s.mealPeriod === mealPeriod);
+    if (alreadyServed) {
+      setScanState('duplicate');
+      return;
+    }
+
+    const scannedAt = new Date().toISOString();
+    const newCount = parseInt(soldier.mealsServed || '0', 10) + 1;
+    const newQueue = [...q, { id, rank: soldier.rank, lastName: soldier.lastName, firstName: soldier.firstName, unit: soldier.unit, mealPeriod, scannedAt }];
+    saveQueue(newQueue);
+    setQueue(newQueue);
+
+    // Optimistically bump the cached count so a repeat scan of the same
+    // soldier is still caught as a duplicate before the next sync.
+    soldier.mealsServed = String(newCount);
+    saveRoster(r);
+    setRoster({ ...r });
+
+    setScanResult({ rank: soldier.rank, lastName: soldier.lastName, firstName: soldier.firstName, unit: soldier.unit, mealsServed: newCount });
+    setThanks(THANKS[Math.floor(Math.random() * THANKS.length)]);
+    setOfflineResult(true);
+    setScanState('success');
+  };
+
+  const refreshRoster = async () => {
+    try {
+      const res = await fetch('/api/roster');
+      if (!res.ok) throw new Error();
+      const data = await res.json();
+      const snapshot = { ...data, syncedAt: new Date().toISOString() };
+      saveRoster(snapshot);
+      setRoster(snapshot);
+      setIsOffline(false);
+    } catch {
+      setIsOffline(true);
+    }
+  };
+
+  const flushQueue = async () => {
+    // Coming back online can fire the browser's native `online` event and
+    // the periodic sync interval within milliseconds of each other — guard
+    // against two concurrent flushes racing (each would fetch the same
+    // queued items, and the loser sees them all bounce as "already synced").
+    if (syncingRef.current) return;
+    const current = loadQueue();
+    if (!current.length) return;
+    syncingRef.current = true;
+    try {
+      const res = await fetch('/api/scan-sync', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ scans: current }),
+      });
+      if (!res.ok) return;
+      const { results } = await res.json();
+      const failed = results.filter(r => !r.ok).length;
+      setSyncMsg(`Synced ${results.length - failed} offline scan${results.length - failed === 1 ? '' : 's'}${failed ? `, ${failed} couldn't be applied` : ''}`);
+      setTimeout(() => setSyncMsg(''), 6000);
+      saveQueue([]);
+      setQueue([]);
+      setIsOffline(false);
+      refreshRoster();
+    } catch {
+      setIsOffline(true);
+    } finally {
+      syncingRef.current = false;
+    }
   };
 
   const reset = () => {
@@ -183,6 +298,20 @@ export default function Scanner() {
 
   useEffect(() => () => { stopCamera(); clearTimeout(resetTimer.current); }, []);
 
+  // Load whatever roster/queue survived from the last session, then try to
+  // sync immediately and keep syncing in the background so the cache stays
+  // fresh and any offline scans go out as soon as the network's back.
+  useEffect(() => {
+    setRoster(loadRoster());
+    setQueue(loadQueue());
+    refreshRoster();
+    flushQueue();
+    const iv = setInterval(() => { refreshRoster(); flushQueue(); }, SYNC_INTERVAL_MS);
+    const onOnline = () => { refreshRoster(); flushQueue(); };
+    window.addEventListener('online', onOnline);
+    return () => { clearInterval(iv); window.removeEventListener('online', onOnline); };
+  }, []);
+
   // Generate a QR to the public register page so soldiers without a pass
   // yet can sign up on their own phone right from the kiosk screen
   useEffect(() => {
@@ -216,6 +345,7 @@ export default function Scanner() {
           {scanState === 'idle' && (
             <div className={styles.kioskRow}>
               <div className={styles.idleBox}>
+                <SyncStatus isOffline={isOffline} queueLen={queue.length} roster={roster} syncMsg={syncMsg} />
                 <h1 className={styles.h1}>Scan Your Meal Pass Here</h1>
                 <div className={styles.mealBtns}>
                   {MEAL_PERIODS.map(m => (
@@ -263,6 +393,7 @@ export default function Scanner() {
                   style={{ position: 'absolute', opacity: 0, height: 1, width: 1, left: -9999 }}
                 />
                 <div className={styles.mealBadge}>{mealPeriod}</div>
+                <SyncStatus isOffline={isOffline} queueLen={queue.length} roster={roster} syncMsg={syncMsg} />
                 <h1 className={styles.h1}>Ready — Scan Pass</h1>
                 <p className={styles.hint}>Scan a soldier&apos;s QR pass with the handheld reader.</p>
                 <div className={styles.captured}>
@@ -306,6 +437,9 @@ export default function Scanner() {
               <div className={styles.resultMeal}>{mealPeriod} — Meal Logged</div>
               <p className={styles.resultThanks}>{thanks}</p>
               <div className={styles.resultCount}>Total meals served: {result.mealsServed}</div>
+              {offlineResult && (
+                <p className={styles.offlineNote}>⚠ Recorded offline — will sync automatically once back online</p>
+              )}
               <div className={styles.autoReset}>Next soldier can scan in 5s…</div>
             </div>
           )}
@@ -343,6 +477,23 @@ export default function Scanner() {
         </div>
       </Shell>
     </>
+  );
+}
+
+function SyncStatus({ isOffline, queueLen, roster, syncMsg }) {
+  if (syncMsg) return <div className={`${styles.syncStatus} ${styles.syncOk}`}>✓ {syncMsg}</div>;
+  if (!isOffline && !queueLen) return null;
+  return (
+    <div className={`${styles.syncStatus} ${isOffline ? styles.syncOffline : ''}`}>
+      {isOffline
+        ? <>⚠ Offline — verifying against last synced roster</>
+        : <>↻ Syncing {queueLen} offline scan{queueLen === 1 ? '' : 's'}…</>}
+      {roster?.syncedAt && (
+        <span className={styles.syncTime}>
+          {' '}· Roster synced {new Date(roster.syncedAt).toLocaleTimeString('en-US', { hour12: false })}
+        </span>
+      )}
+    </div>
   );
 }
 

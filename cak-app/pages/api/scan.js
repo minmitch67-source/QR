@@ -1,25 +1,11 @@
 import db from '../../lib/db';
+import { parsePassId } from '../../lib/qrParse';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end();
 
   const { qrData, mealPeriod } = req.body;
-
-  // Resolve the soldier id from the QR payload. Prefer JSON, but fall back to
-  // extracting the UUID directly — handheld (keyboard-wedge) scanners can
-  // garble JSON punctuation under different keyboard layouts, while the UUID
-  // (hex + hyphens) is layout-safe.
-  let id;
-  try {
-    const parsed = typeof qrData === 'string' ? JSON.parse(qrData) : qrData;
-    id = parsed?.id;
-  } catch {
-    id = null;
-  }
-  if (!id && typeof qrData === 'string') {
-    const m = qrData.match(/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i);
-    if (m) id = m[0];
-  }
+  const id = parsePassId(qrData);
   if (!id) return res.status(400).json({ error: 'Invalid QR data' });
 
   const soldier = await db.hgetall(`soldier:${id}`);
