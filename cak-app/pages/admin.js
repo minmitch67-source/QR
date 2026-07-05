@@ -21,6 +21,8 @@ export default function Admin() {
   const [actionLoading, setActionLoading] = useState({});
   const [storedPin, setStoredPin] = useState('');
   const [copied, setCopied] = useState('');
+  const [scanErrors, setScanErrors] = useState(null);
+  const [scanErrorsLoading, setScanErrorsLoading] = useState(false);
 
   function today() { return new Date().toISOString().slice(0, 10); }
 
@@ -144,6 +146,26 @@ export default function Admin() {
     a.href = url;
     a.download = type === 'soldiers' ? `cak_soldiers_${today()}.csv` : `cak_scans_${today()}.csv`;
     a.click();
+  };
+
+  const loadScanErrors = async () => {
+    setScanErrorsLoading(true);
+    try {
+      const res = await fetch(`/api/scan-debug?pin=${encodeURIComponent(storedPin)}`);
+      const json = await res.json();
+      setScanErrors(json.entries || []);
+    } finally {
+      setScanErrorsLoading(false);
+    }
+  };
+
+  const clearScanErrors = async () => {
+    await fetch('/api/scan-debug', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ pin: storedPin, action: 'clear' }),
+    });
+    setScanErrors([]);
   };
 
   const exportDA3032 = async () => {
@@ -450,6 +472,37 @@ export default function Admin() {
                     <button className="btn btn-g" onClick={() => copyLink(l.path)}>
                       {copied === l.path ? '✓ Copied' : 'Copy Link'}
                     </button>
+                  </div>
+                ))}
+              </div>
+
+              <div style={{ marginTop: 28 }}>
+                <div className={styles.sectionNote} style={{ marginBottom: 8 }}>Recent Scan Errors</div>
+                <p style={{ fontSize: 12, color: 'var(--ghi)', lineHeight: 1.7, maxWidth: 560, marginBottom: 12 }}>
+                  The last few scans the server couldn&apos;t parse into a pass id — useful for spotting a
+                  scanner transmitting the wrong characters (e.g. a keyboard-layout mismatch) without
+                  needing a photo of the kiosk screen.
+                </p>
+                <div style={{ display: 'flex', gap: 12, marginBottom: 16 }}>
+                  <button className="btn btn-g" onClick={loadScanErrors} disabled={scanErrorsLoading}>
+                    {scanErrorsLoading ? 'Loading…' : 'Load Recent Scan Errors'}
+                  </button>
+                  {scanErrors?.length > 0 && (
+                    <button className="btn btn-g" onClick={clearScanErrors}>Clear</button>
+                  )}
+                </div>
+                {scanErrors && scanErrors.length === 0 && (
+                  <p style={{ fontSize: 12, color: 'var(--gmd)' }}>No parse failures logged.</p>
+                )}
+                {scanErrors?.map((e, i) => (
+                  <div key={i} style={{
+                    padding: '10px 0', borderBottom: '1px solid #1a1a1a',
+                    fontFamily: 'var(--mono)', fontSize: 12,
+                  }}>
+                    <div style={{ color: 'var(--gmd)', fontSize: 10, marginBottom: 4 }}>
+                      {new Date(e.ts).toLocaleString('en-US', { hour12: false })} · {e.mealPeriod || 'no meal set'} · {(e.qrData || '').length} chars
+                    </div>
+                    <div style={{ wordBreak: 'break-all', userSelect: 'all' }}>{e.qrData}</div>
                   </div>
                 ))}
               </div>

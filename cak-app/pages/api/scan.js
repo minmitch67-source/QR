@@ -6,7 +6,15 @@ export default async function handler(req, res) {
 
   const { qrData, mealPeriod } = req.body;
   const id = parsePassId(qrData);
-  if (!id) return res.status(400).json({ error: 'Invalid QR data' });
+  if (!id) {
+    // Keep the last few raw payloads that failed to parse so a scanner
+    // mis-transmitting characters (e.g. a keyboard-layout mismatch) can be
+    // diagnosed from the admin dashboard instead of a photo of the kiosk
+    // screen.
+    await db.lpush('debug:invalidScans', JSON.stringify({ qrData, mealPeriod, ts: new Date().toISOString() }));
+    await db.ltrim('debug:invalidScans', 0, 19);
+    return res.status(400).json({ error: 'Invalid QR data' });
+  }
 
   const soldier = await db.hgetall(`soldier:${id}`);
   if (!soldier) return res.status(404).json({ error: 'Soldier not found' });
