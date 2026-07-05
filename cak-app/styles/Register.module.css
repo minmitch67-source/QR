@@ -150,7 +150,7 @@
 .successUnit { font-size: 12px; color: var(--gmd); margin-top: 4px; margin-bottom: 24px; }
 
 .qrWrap { margin: 16px 0 24px; }
-.qrImg { width: 180px; height: 180px; image-rendering: pixelated; border: 2px solid #222; }
+.qrImg { width: 320px; height: 320px; max-width: 100%; image-rendering: pixelated; border: 2px solid #222; }
 .qrNote { font-size: 10px; color: var(--gmd); margin-top: 8px; font-family: var(--mono); }
 
 .countdownRow {

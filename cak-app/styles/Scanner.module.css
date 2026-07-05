@@ -114,6 +114,10 @@
 }
 .resultThanks { font-size: 19px; color: #fff; margin-bottom: 20px; }
 .resultCount { font-size: 12px; color: var(--gmd); font-family: var(--mono); }
+.rawScan {
+  font-size: 11px; color: var(--gmd); font-family: var(--mono);
+  margin-top: 12px; word-break: break-all; line-height: 1.6;
+}
 .autoReset { font-size: 11px; color: var(--gmd); margin-top: 18px; font-family: var(--mono); }
 
 .spinner {

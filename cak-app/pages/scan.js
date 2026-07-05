@@ -25,6 +25,7 @@ export default function Scanner() {
   const [mode, setMode] = useState('camera'); // camera | hardware
   const [result, setScanResult] = useState(null);
   const [errorMsg, setErrorMsg] = useState('');
+  const [lastRaw, setLastRaw] = useState('');
   const [captured, setCaptured] = useState('');
   const [registerQr, setRegisterQr] = useState('');
   const [thanks, setThanks] = useState(THANKS[0]);
@@ -91,6 +92,7 @@ export default function Scanner() {
 
   const processScan = async (qrData) => {
     setScanState('processing');
+    setLastRaw(qrData);
     try {
       const res = await fetch('/api/scan', {
         method: 'POST',
@@ -187,7 +189,7 @@ export default function Scanner() {
     (async () => {
       const QRCode = (await import('qrcode')).default;
       const url = `${window.location.origin}/register`;
-      const data = await QRCode.toDataURL(url, { width: 240, margin: 1 });
+      const data = await QRCode.toDataURL(url, { width: 240, margin: 4 });
       setRegisterQr(data);
     })();
   }, []);
@@ -331,6 +333,9 @@ export default function Scanner() {
               <div className={`${styles.resultIcon} ${styles.err}`}>✕</div>
               <h2 className={styles.resultName}>Scan Error</h2>
               <p className={styles.resultUnit}>{errorMsg}</p>
+              {lastRaw && (
+                <p className={styles.rawScan}>Scanned: &quot;{lastRaw}&quot; ({lastRaw.length} chars)</p>
+              )}
               <button className="btn btn-g" onClick={reset} style={{ marginTop: 24 }}>Try Again</button>
             </div>
           )}

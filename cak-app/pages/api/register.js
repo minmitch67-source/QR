@@ -27,7 +27,10 @@ export default async function handler(req, res) {
 
   // Generate QR code data URI
   const qrData = JSON.stringify({ id, rank, lastName, firstName, unit });
-  const qrCode = await QRCode.toDataURL(qrData, { width: 300, margin: 1 });
+  // margin: 4 is the QR spec's minimum quiet zone — undersizing it (e.g. margin: 1)
+  // reads fine with a phone camera but is unreliable on fixed-mount imagers,
+  // especially scanning off a glossy screen instead of print.
+  const qrCode = await QRCode.toDataURL(qrData, { width: 320, margin: 4, errorCorrectionLevel: 'M' });
 
   soldier.qrCode = qrCode;
 
