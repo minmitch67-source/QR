@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
+import jsQR from 'jsqr';
+import QRCode from 'qrcode';
 import Shell from '../components/Shell';
 import Hero from '../components/Hero';
 import KioskGuard from '../components/KioskGuard';
@@ -87,9 +89,6 @@ export default function Scanner() {
     const ctx = canvas.getContext('2d');
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
     const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-
-    // Dynamically import jsQR to avoid SSR issues
-    const jsQR = (await import('jsqr')).default;
     const code = jsQR(imageData.data, imageData.width, imageData.height);
 
     if (code) {
@@ -316,7 +315,6 @@ export default function Scanner() {
   // yet can sign up on their own phone right from the kiosk screen
   useEffect(() => {
     (async () => {
-      const QRCode = (await import('qrcode')).default;
       const url = `${window.location.origin}/register`;
       const data = await QRCode.toDataURL(url, { width: 240, margin: 4 });
       setRegisterQr(data);
