@@ -479,9 +479,10 @@ export default function Admin() {
               <div style={{ marginTop: 28 }}>
                 <div className={styles.sectionNote} style={{ marginBottom: 8 }}>Recent Scan Errors</div>
                 <p style={{ fontSize: 12, color: 'var(--ghi)', lineHeight: 1.7, maxWidth: 560, marginBottom: 12 }}>
-                  The last few scans the server couldn&apos;t parse into a pass id — useful for spotting a
-                  scanner transmitting the wrong characters (e.g. a keyboard-layout mismatch) without
-                  needing a photo of the kiosk screen.
+                  The last few scans the server rejected — invalid data, soldier not found, or pass not
+                  approved — with the raw text the scanner sent. Useful for spotting a scanner transmitting
+                  the wrong characters (e.g. a keyboard-layout mismatch) without needing a photo of the
+                  kiosk screen.
                 </p>
                 <div style={{ display: 'flex', gap: 12, marginBottom: 16 }}>
                   <button className="btn btn-g" onClick={loadScanErrors} disabled={scanErrorsLoading}>
@@ -492,7 +493,7 @@ export default function Admin() {
                   )}
                 </div>
                 {scanErrors && scanErrors.length === 0 && (
-                  <p style={{ fontSize: 12, color: 'var(--gmd)' }}>No parse failures logged.</p>
+                  <p style={{ fontSize: 12, color: 'var(--gmd)' }}>No rejected scans logged.</p>
                 )}
                 {scanErrors?.map((e, i) => (
                   <div key={i} style={{
@@ -500,7 +501,7 @@ export default function Admin() {
                     fontFamily: 'var(--mono)', fontSize: 12,
                   }}>
                     <div style={{ color: 'var(--gmd)', fontSize: 10, marginBottom: 4 }}>
-                      {new Date(e.ts).toLocaleString('en-US', { hour12: false })} · {e.mealPeriod || 'no meal set'} · {(e.qrData || '').length} chars
+                      {new Date(e.ts).toLocaleString('en-US', { hour12: false })} · {e.mealPeriod || 'no meal set'} · {(e.qrData || '').length} chars · <span style={{ color: '#e53' }}>{e.error}</span>
                     </div>
                     <div style={{ wordBreak: 'break-all', userSelect: 'all' }}>{e.qrData}</div>
                   </div>

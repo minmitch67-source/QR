@@ -1,24 +1,32 @@
 import db from '../../lib/db';
 import { parsePassId } from '../../lib/qrParse';
 
+// Keep the last few rejected scans (raw payload + why) so a scanner
+// mis-transmitting characters, or a pass that isn't what the kiosk expects,
+// can be diagnosed from the admin dashboard instead of a photo of the kiosk
+// screen.
+async function logFailedScan(qrData, mealPeriod, error) {
+  await db.lpush('debug:scanErrors', JSON.stringify({ qrData, mealPeriod, error, ts: new Date().toISOString() }));
+  await db.ltrim('debug:scanErrors', 0, 19);
+}
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end();
 
   const { qrData, mealPeriod } = req.body;
   const id = parsePassId(qrData);
   if (!id) {
-    // Keep the last few raw payloads that failed to parse so a scanner
-    // mis-transmitting characters (e.g. a keyboard-layout mismatch) can be
-    // diagnosed from the admin dashboard instead of a photo of the kiosk
-    // screen.
-    await db.lpush('debug:invalidScans', JSON.stringify({ qrData, mealPeriod, ts: new Date().toISOString() }));
-    await db.ltrim('debug:invalidScans', 0, 19);
+    await logFailedScan(qrData, mealPeriod, 'Invalid QR data');
     return res.status(400).json({ error: 'Invalid QR data' });
   }
 
   const soldier = await db.hgetall(`soldier:${id}`);
-  if (!soldier) return res.status(404).json({ error: 'Soldier not found' });
+  if (!soldier) {
+    await logFailedScan(qrData, mealPeriod, 'Soldier not found');
+    return res.status(404).json({ error: 'Soldier not found' });
+  }
   if (soldier.status !== 'approved') {
+    await logFailedScan(qrData, mealPeriod, `Pass not approved (status: ${soldier.status})`);
     return res.status(403).json({ error: 'Pass not approved', status: soldier.status });
   }
 
