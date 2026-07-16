@@ -8,12 +8,16 @@
     "start": "next start"
   },
   "dependencies": {
+    "@sarap422/font-d-din": "^1.0.6",
+    "@vercel/kv": "^2.0.0",
+    "jsqr": "^1.4.0",
     "next": "14.2.3",
+    "pdf-lib": "^1.17.1",
+    "pdfjs-dist": "^3.11.174",
+    "qrcode": "^1.5.3",
     "react": "18.3.1",
     "react-dom": "18.3.1",
-    "@vercel/kv": "^2.0.0",
-    "qrcode": "^1.5.3",
-    "jsqr": "^1.4.0",
+    "sharp": "^0.35.2",
     "uuid": "^9.0.1"
   }
 }

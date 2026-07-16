@@ -9,42 +9,66 @@
   padding: 0 24px;
 }
 .hdrTitle { font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
-.hdrSite { font-size: 9px; font-family: 'Courier New', monospace; color: #888; letter-spacing: .1em; }
+.hdrSite { font-size: 9px; font-family: var(--mono); color: var(--gmd); letter-spacing: .1em; }
 
 .body {
-  flex: 1; display: flex; align-items: center; justify-content: center;
-  padding: 40px 24px;
+  min-height: 88vh;
+  display: flex; align-items: center; justify-content: center;
+  padding: 48px 24px;
 }
 
-.idleBox { text-align: center; max-width: 400px; width: 100%; }
-.scanIcon { font-size: 64px; color: #333; margin-bottom: 24px; }
+.kioskRow {
+  display: flex; align-items: center; justify-content: center; gap: 96px;
+  flex-wrap: wrap; width: 100%;
+}
+
+.idleBox { text-align: center; max-width: 620px; width: 100%; }
 .h1 {
-  font-size: 28px; font-weight: 900; letter-spacing: -.02em;
-  text-transform: uppercase; margin-bottom: 32px;
+  font-size: 64px; font-weight: 900; letter-spacing: -.02em;
+  text-transform: uppercase; margin-bottom: 48px; line-height: 1.03;
 }
+@media (max-width: 700px) { .h1 { font-size: 36px; margin-bottom: 32px; } }
 
-.mealBtns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 32px; }
+.mealBtns { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; margin-bottom: 40px; }
 .mealBtn {
-  padding: 12px 24px;
+  padding: 20px 40px;
   background: #111; border: 1px solid #222;
-  color: #888; font-size: 11px; font-weight: 700;
+  color: #fff; font-size: 16px; font-weight: 700;
   letter-spacing: .12em; text-transform: uppercase;
   cursor: pointer; transition: all .2s;
 }
 .mealBtnActive {
   background: #fff; color: #000; border-color: #fff;
 }
-.scanStartBtn { width: 100%; justify-content: center; margin-bottom: 16px; }
+.scanStartBtn { width: 100%; justify-content: center; margin-bottom: 18px; font-size: 15px !important; padding: 22px 0 !important; }
 .scanStartBtn:disabled { opacity: .3; cursor: not-allowed; }
-.hint { font-size: 10px; color: #444; font-family: 'Courier New', monospace; letter-spacing: .08em; }
+.hint { font-size: 13px; color: var(--gmd); font-family: var(--mono); letter-spacing: .08em; }
+.captured { margin-top: 22px; font-family: var(--mono); font-size: 13px; letter-spacing: .1em; color: var(--gmd); }
+
+/* No-pass reminder — persistent side panel, visible in every resting state */
+.noPassPanel {
+  width: 340px; flex-shrink: 0;
+  padding: 36px 32px;
+  border: 1px solid #1a1a1a; border-radius: 16px;
+  background: rgba(255,255,255,.02);
+  text-align: center;
+}
+.noPassEyebrow {
+  font-size: 13px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase;
+  color: var(--gmd); margin-bottom: 20px;
+}
+.registerQr { width: 200px; height: 200px; border-radius: 10px; margin-bottom: 20px; }
+.noPassText { font-size: 15px; color: var(--gmd); line-height: 1.6; text-align: left; margin-bottom: 14px; }
+.noPassText:last-child { margin-bottom: 0; }
+.noPassText b { color: #fff; }
 
 /* Camera */
 .cameraBox { width: 100%; max-width: 500px; text-align: center; }
 .mealBadge {
-  display: inline-block; margin-bottom: 16px;
-  padding: 4px 12px;
+  display: inline-block; margin-bottom: 20px;
+  padding: 8px 20px;
   background: #fff; color: #000;
-  font-size: 10px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase;
+  font-size: 13px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase;
 }
 .viewfinder {
   position: relative; width: 100%; aspect-ratio: 1;
@@ -64,32 +88,52 @@
 }
 
 .corner { position: absolute; width: 24px; height: 24px; }
-.scanHint { font-size: 11px; color: #666; margin-bottom: 20px; font-family: 'Courier New', monospace; }
+.scanHint { font-size: 11px; color: var(--gmd); margin-bottom: 20px; font-family: var(--mono); }
 
 /* Result */
-.resultBox { text-align: center; max-width: 360px; width: 100%; }
+.resultBox { text-align: center; max-width: 480px; width: 100%; }
 .resultIcon {
-  font-size: 64px; margin-bottom: 20px; line-height: 1;
-  width: 80px; height: 80px;
+  font-size: 80px; margin-bottom: 24px; line-height: 1;
+  width: 110px; height: 110px;
   display: flex; align-items: center; justify-content: center;
-  margin: 0 auto 24px;
+  margin: 0 auto 28px;
   border-radius: 50%;
 }
-.ok { background: #002211; color: #2d9; font-size: 40px; }
-.warn { background: #221100; color: #fa0; font-size: 36px; }
-.err { background: #220011; color: #e53; font-size: 36px; }
+.ok { background: #002211; color: #2d9; font-size: 52px; }
+.warn { background: #221100; color: #fa0; font-size: 46px; }
+.err { background: #220011; color: #e53; font-size: 46px; }
 
 .resultName {
-  font-size: 28px; font-weight: 900; text-transform: uppercase;
-  letter-spacing: -.01em; margin-bottom: 8px;
+  font-size: 40px; font-weight: 900; text-transform: uppercase;
+  letter-spacing: -.01em; margin-bottom: 10px;
 }
-.resultUnit { font-size: 13px; color: #888; margin-bottom: 20px; }
+.resultUnit { font-size: 16px; color: var(--ghi); margin-bottom: 24px; }
 .resultMeal {
-  font-size: 11px; font-weight: 700; letter-spacing: .14em;
-  text-transform: uppercase; color: #2d9; margin-bottom: 8px;
+  font-size: 13px; font-weight: 700; letter-spacing: .14em;
+  text-transform: uppercase; color: #2d9; margin-bottom: 10px;
 }
-.resultCount { font-size: 10px; color: #555; font-family: 'Courier New', monospace; }
-.autoReset { font-size: 9px; color: #333; margin-top: 16px; font-family: 'Courier New', monospace; }
+.resultThanks { font-size: 19px; color: #fff; margin-bottom: 20px; }
+.resultCount { font-size: 12px; color: var(--gmd); font-family: var(--mono); }
+.rawScan {
+  font-size: 11px; color: var(--gmd); font-family: var(--mono);
+  margin-top: 12px; word-break: break-all; line-height: 1.6;
+}
+.autoReset { font-size: 11px; color: var(--gmd); margin-top: 18px; font-family: var(--mono); }
+.offlineNote {
+  font-size: 12px; color: #fa0; font-family: var(--mono);
+  letter-spacing: .04em; margin-top: 4px;
+}
+
+.syncStatus {
+  display: inline-block; margin-bottom: 20px;
+  padding: 6px 14px; border-radius: 999px;
+  background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.12);
+  font-size: 11px; font-family: var(--mono); letter-spacing: .04em;
+  color: var(--gmd);
+}
+.syncOffline { color: #fa0; border-color: rgba(255,170,0,.35); background: rgba(255,170,0,.08); }
+.syncOk { color: #2d9; border-color: rgba(45,232,159,.35); background: rgba(45,232,159,.08); }
+.syncTime { color: var(--gmd); }
 
 .spinner {
   width: 40px; height: 40px;

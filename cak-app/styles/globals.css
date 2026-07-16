@@ -1,5 +1,13 @@
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
+/* Real SpaceX typeface — D-DIN PRO, self-hosted */
+@font-face { font-family: 'D-DIN PRO'; font-style: normal; font-weight: 400; font-display: swap; src: url('/fonts/D-DIN-PRO-400-Regular.woff2') format('woff2'); }
+@font-face { font-family: 'D-DIN PRO'; font-style: normal; font-weight: 500; font-display: swap; src: url('/fonts/D-DIN-PRO-500-Medium.woff2') format('woff2'); }
+@font-face { font-family: 'D-DIN PRO'; font-style: normal; font-weight: 600; font-display: swap; src: url('/fonts/D-DIN-PRO-600-SemiBold.woff2') format('woff2'); }
+@font-face { font-family: 'D-DIN PRO'; font-style: normal; font-weight: 700; font-display: swap; src: url('/fonts/D-DIN-PRO-700-Bold.woff2') format('woff2'); }
+@font-face { font-family: 'D-DIN PRO'; font-style: normal; font-weight: 800; font-display: swap; src: url('/fonts/D-DIN-PRO-800-ExtraBold.woff2') format('woff2'); }
+@font-face { font-family: 'D-DIN PRO'; font-style: normal; font-weight: 900; font-display: swap; src: url('/fonts/D-DIN-PRO-900-Heavy.woff2') format('woff2'); }
+
 :root {
   --bg: #000;
   --bg1: #0a0a0a;
@@ -7,14 +15,14 @@
   --line: #1a1a1a;
   --line2: #222;
   --w: #fff;
-  --ghi: #ccc;
-  --gmd: #888;
-  --glo: #444;
+  --ghi: #ced2d8;
+  --gmd: #868c96;
+  --glo: #5a5f69;
   --accent: #fff;
-  --red: #e53;
-  --green: #2d9;
-  --mono: 'Courier New', monospace;
-  --font: 'Inter', -apple-system, sans-serif;
+  --red: #ff4d4d;
+  --green: #2de89f;
+  --mono: 'D-DIN PRO', 'Inter', -apple-system, sans-serif;
+  --font: 'D-DIN PRO', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 html, body {
@@ -24,53 +32,75 @@ html, body {
   font-size: 14px;
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
+/* SpaceX-style display headings: clean DIN-like, uppercase */
+h1, h2, h3 { font-weight: 700; letter-spacing: .005em; line-height: 1.02; }
+
+/* --- Buttons: thin, squared, arrow-friendly --- */
 .btn {
-  display: inline-flex; align-items: center; gap: 8px;
-  padding: 12px 28px;
-  font-size: 11px; font-weight: 700; letter-spacing: .14em;
+  display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+  padding: 14px 30px;
+  font-family: var(--font);
+  font-size: 11px; font-weight: 700; letter-spacing: .22em;
   text-transform: uppercase; border: none; cursor: pointer;
-  transition: opacity .2s;
+  border-radius: 2px;
+  transition: background .15s, color .15s, opacity .15s, border-color .15s;
 }
-.btn:hover { opacity: .8; }
+.btn:hover { opacity: .85; }
 .btn-p { background: var(--w); color: #000; }
-.btn-g { background: transparent; color: var(--w); border: 1px solid var(--line2); }
-.btn-red { background: var(--red); color: var(--w); }
-.btn-green { background: var(--green); color: #000; }
-.btn-lg { padding: 14px 36px; font-size: 12px; }
-.btn-block { width: 100%; justify-content: center; }
+.btn-p:hover { background: #e8e8e8; opacity: 1; }
+.btn-g { background: rgba(255,255,255,.04); color: var(--w); border: 1px solid rgba(255,255,255,.25); }
+.btn-g:hover { background: rgba(255,255,255,.1); border-color: rgba(255,255,255,.5); opacity: 1; }
+.btn-red { background: transparent; color: var(--red); border: 1px solid var(--red); }
+.btn-red:hover { background: var(--red); color: #fff; opacity: 1; }
+.btn-green { background: var(--green); color: #00130c; }
+.btn-green:hover { background: #4ff0b3; opacity: 1; }
+.btn-lg { padding: 16px 38px; font-size: 12px; }
+.btn-block { width: 100%; }
 
+/* --- Inputs --- */
 input, select, textarea {
   width: 100%;
   background: var(--bg2);
   border: 1px solid var(--line2);
   color: var(--w);
-  padding: 10px 14px;
-  font-size: 13px;
+  padding: 13px 14px;
+  font-size: 14px;
   font-family: var(--font);
+  border-radius: 2px;
   outline: none;
-  transition: border-color .2s;
+  transition: border-color .15s, background .15s;
 }
-input:focus, select:focus, textarea:focus {
-  border-color: #555;
-}
+input:focus, select:focus, textarea:focus { border-color: #6a6a6a; background: #141414; }
+input::placeholder, textarea::placeholder { color: #555; }
 select option { background: #111; }
 label {
   display: block;
-  font-size: 9px; font-weight: 700; letter-spacing: .18em;
+  font-family: var(--mono);
+  font-size: 10px; font-weight: 700; letter-spacing: .18em;
   text-transform: uppercase; color: var(--gmd);
-  margin-bottom: 6px;
+  margin-bottom: 8px;
 }
-textarea { resize: vertical; min-height: 72px; }
+textarea { resize: vertical; min-height: 80px; }
 
+/* --- Shared bits --- */
 .mono { font-family: var(--mono); }
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 10px; letter-spacing: .28em; text-transform: uppercase;
+  color: var(--gmd);
+}
 .tag {
   display: inline-block;
-  padding: 2px 8px;
-  font-size: 9px; font-weight: 700; letter-spacing: .12em;
-  text-transform: uppercase;
+  padding: 3px 9px;
+  font-family: var(--mono);
+  font-size: 9px; font-weight: 700; letter-spacing: .14em;
+  text-transform: uppercase; border-radius: 2px;
 }
-.tag-pending { background: #332200; color: #fa0; }
-.tag-approved { background: #002211; color: var(--green); }
-.tag-denied { background: #220011; color: var(--red); }
+.tag-pending { background: rgba(255,170,0,.12); color: #fa0; }
+.tag-approved { background: rgba(45,232,159,.12); color: var(--green); }
+.tag-denied { background: rgba(255,77,77,.12); color: var(--red); }
+
+::selection { background: #fff; color: #000; }

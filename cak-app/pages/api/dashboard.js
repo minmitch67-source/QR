@@ -1,4 +1,5 @@
 import db from '../../lib/db';
+import { unitGroup, unitToken } from '../../lib/units';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end();
@@ -40,6 +41,19 @@ export default async function handler(req, res) {
     d.setDate(d.getDate() + 1);
   }
 
+  // Group pending by normalized unit, with a per-unit S1 link token
+  const unitMap = new Map();
+  for (const s of pending) {
+    const g = unitGroup(s.unit, s.component);
+    if (!unitMap.has(g.key)) {
+      unitMap.set(g.key, { unitKey: g.key, label: g.label, token: unitToken(g.key), soldiers: [] });
+    }
+    unitMap.get(g.key).soldiers.push(s);
+  }
+  const pendingByUnit = [...unitMap.values()]
+    .map(g => ({ ...g, count: g.soldiers.length }))
+    .sort((a, b) => a.label.localeCompare(b.label));
+
   // Today's scans
   const todayScanIds = await db.smembers(`scans:${today}`) || [];
   const todayScans = await Promise.all(todayScanIds.map(id => db.hgetall(`scan:${id}`)));
@@ -52,6 +66,7 @@ export default async function handler(req, res) {
       mealsToday: parseInt(await db.get(`meals:daily:${today}`) || '0'),
     },
     pending,
+    pendingByUnit,
     approved,
     denied,
     dailyMeals,

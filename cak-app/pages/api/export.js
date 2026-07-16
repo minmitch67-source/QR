@@ -1,4 +1,11 @@
 import db from '../../lib/db';
+import { unitGroup } from '../../lib/units';
+
+// CSV-safe: quote values containing comma/quote/newline
+const cell = (v) => {
+  const s = v == null ? '' : String(v);
+  return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+};
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end();
@@ -12,14 +19,14 @@ export default async function handler(req, res) {
     const allIds = await db.smembers('all') || [];
     const soldiers = (await Promise.all(allIds.map(id => db.hgetall(`soldier:${id}`)))).filter(Boolean);
 
-    const headers = ['ID','Rank','Last','First','Unit','Site','Status','Entitlement','Start','End','Meals','Created'];
+    const headers = ['ID','Rank','Last','First','Component','Unit','Battalion','Site','Status','Entitlement','Start','End','Meals','Created'];
     const rows = soldiers.map(s => [
-      s.id, s.rank, s.lastName, s.firstName, s.unit, s.site,
+      s.id, s.rank, s.lastName, s.firstName, s.component, s.unit, unitGroup(s.unit, s.component).label, s.site,
       s.status, s.entitlement, s.startDate, s.endDate,
       s.mealsServed, s.createdAt,
     ]);
 
-    const csv = [headers, ...rows].map(r => r.join(',')).join('\n');
+    const csv = [headers, ...rows].map(r => r.map(cell).join(',')).join('\n');
     res.setHeader('Content-Type', 'text/csv');
     res.setHeader('Content-Disposition', `attachment; filename=cak_soldiers_${new Date().toISOString().slice(0,10)}.csv`);
     return res.send(csv);
@@ -36,7 +43,7 @@ export default async function handler(req, res) {
       return [s.date, dt.toTimeString().slice(0,8), s.rank, s.lastName, s.firstName, s.unit, s.mealPeriod];
     });
 
-    const csv = [headers, ...rows].map(r => r.join(',')).join('\n');
+    const csv = [headers, ...rows].map(r => r.map(cell).join(',')).join('\n');
     res.setHeader('Content-Type', 'text/csv');
     res.setHeader('Content-Disposition', `attachment; filename=cak_scans_${new Date().toISOString().slice(0,10)}.csv`);
     return res.send(csv);

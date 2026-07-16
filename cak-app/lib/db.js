@@ -16,6 +16,9 @@ const memKV = {
   async incr(key) { mem[key] = (mem[key] || 0) + 1; return mem[key]; },
   async get(key) { return mem[key] ?? null; },
   async set(key, val) { mem[key] = val; },
+  async lpush(key, ...vals) { mem[key] = [...vals.reverse(), ...(mem[key] || [])]; },
+  async ltrim(key, start, stop) { if (mem[key]) mem[key] = mem[key].slice(start, stop < 0 ? mem[key].length + stop + 1 : stop + 1); },
+  async lrange(key, start, stop) { return mem[key] ? mem[key].slice(start, stop < 0 ? mem[key].length + stop + 1 : stop + 1) : []; },
 };
 
 const db = kv || memKV;

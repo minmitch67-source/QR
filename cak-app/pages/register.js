@@ -1,5 +1,9 @@
 import { useState, useEffect, useRef } from 'react';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
+import Shell from '../components/Shell';
+import KioskGuard from '../components/KioskGuard';
+import InstallPrompt from '../components/InstallPrompt';
 import styles from '../styles/Register.module.css';
 
 const RANKS = [
@@ -11,7 +15,13 @@ const RANKS = [
 
 const MEALS = ['Breakfast','Lunch','Dinner'];
 
+const COMPONENTS = ['U.S. Army','U.S. Navy','U.S. Marines','ROK Army','KATUSA','Civilian'];
+
 export default function Register() {
+  const router = useRouter();
+  const kiosk = 'kiosk' in router.query;
+  const staff = 'staff' in router.query;
+  const showSidebar = staff;
   const [step, setStep] = useState('form'); // form | success | error
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
@@ -20,8 +30,8 @@ export default function Register() {
   const timerRef = useRef(null);
 
   const [form, setForm] = useState({
-    lastName: '', firstName: '', rank: '', unit: '',
-    site: 'C-AK / Dogu Beach',
+    lastName: '', firstName: '', rank: '', unit: '', component: '',
+    site: 'C-AK / Recon Base',
     startDate: '', endDate: '',
     meals: [], entitlement: '', notes: '',
   });
@@ -51,14 +61,14 @@ export default function Register() {
     setResult(null);
     setError('');
     setForm({
-      lastName: '', firstName: '', rank: '', unit: '',
-      site: 'C-AK / Dogu Beach', startDate: '', endDate: '',
+      lastName: '', firstName: '', rank: '', unit: '', component: '',
+      site: 'C-AK / Recon Base', startDate: '', endDate: '',
       meals: [], entitlement: '', notes: '',
     });
   };
 
   const submit = async () => {
-    if (!form.lastName || !form.firstName || !form.rank || !form.unit || !form.entitlement) {
+    if (!form.lastName || !form.firstName || !form.rank || !form.unit || !form.component || !form.entitlement) {
       setError('Please complete all required fields.');
       return;
     }
@@ -86,29 +96,28 @@ export default function Register() {
       <Head>
         <title>C-AK Meal Pass — Register</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta property="og:title" content="Request a C-AK Meal Pass" />
+        <meta property="og:description" content="Register for a QR meal pass at the Containerized Autonomous Kitchen, Recon Base." />
+        <meta property="og:image" content="https://cak-meal-app.vercel.app/container.png" />
+        <meta property="og:url" content="https://cak-meal-app.vercel.app/register" />
+        <meta name="twitter:card" content="summary_large_image" />
       </Head>
 
-      <div className={styles.page}>
-        {/* Header */}
-        <header className={styles.hdr}>
-          <div className={styles.hdrLeft}>
-            <span className={styles.hdrTag}>19th ESC</span>
-            <span className={styles.hdrSep}>·</span>
-            <span className={styles.hdrTitle}>C-AK Meal Pass Registration</span>
-          </div>
-          <div className={styles.hdrRight}>
-            <span className={styles.hdrSite}>C-AK / DOGU BEACH</span>
-            <Clock />
-          </div>
-        </header>
-
+      {kiosk && <KioskGuard />}
+      {!showSidebar && <InstallPrompt />}
+      <Shell active="register" kiosk={!showSidebar}>
         {step === 'form' && (
-          <div className={styles.body}>
-            <div className={styles.hero}>
-              <div className={styles.eyebrow}>Step up to register</div>
-              <h1 className={styles.h1}>Request a<br /><em>Meal Pass</em></h1>
-              <p className={styles.lead}>Complete the form below. Your request will be reviewed by an approver before your QR pass is issued.</p>
-            </div>
+          <>
+            <section className={styles.hero}>
+              <div className={styles.heroGlow} />
+              <img src="/container.png" alt="Containerized Autonomous Kitchen" className={styles.heroImg} />
+              <div className={styles.heroShade} />
+              <div className={styles.heroInner}>
+                <div className={styles.eyebrow}>Soldier Registration</div>
+                <h1 className={styles.h1}>Request a<br /><em>Meal Pass</em></h1>
+                <p className={styles.lead}>Complete the form below. Your request is reviewed by your unit S1 or a Food Service NCO before your QR pass is issued.</p>
+              </div>
+            </section>
 
             <div className={styles.form}>
               {error && <div className={styles.errBox}>{error}</div>}
@@ -123,6 +132,13 @@ export default function Register() {
                   <input value={form.firstName} onChange={e => set('firstName', e.target.value.toUpperCase())} placeholder="JOHN" autoComplete="off" />
                 </div>
                 <div className={styles.fg}>
+                  <label>Component / Service *</label>
+                  <select value={form.component} onChange={e => set('component', e.target.value)}>
+                    <option value="">-- Select --</option>
+                    {COMPONENTS.map(c => <option key={c}>{c}</option>)}
+                  </select>
+                </div>
+                <div className={styles.fg}>
                   <label>Rank *</label>
                   <select value={form.rank} onChange={e => set('rank', e.target.value)}>
                     <option value="">-- Select --</option>
@@ -131,7 +147,7 @@ export default function Register() {
                 </div>
                 <div className={styles.fg}>
                   <label>Unit *</label>
-                  <input value={form.unit} onChange={e => set('unit', e.target.value.toUpperCase())} placeholder="e.g. 2-4 INF" autoComplete="off" />
+                  <input value={form.unit} onChange={e => set('unit', e.target.value.toUpperCase())} placeholder="e.g. A CO 498 CSSB" autoComplete="off" />
                 </div>
                 <div className={styles.fg}>
                   <label>Start Date</label>
@@ -146,12 +162,20 @@ export default function Register() {
               <div className={styles.fg} style={{ marginBottom: 14 }}>
                 <label>Meal Periods</label>
                 <div className={styles.checkRow}>
-                  {MEALS.map(m => (
-                    <label key={m} className={styles.checkItem}>
-                      <input type="checkbox" checked={form.meals.includes(m)} onChange={() => toggleMeal(m)} />
-                      {m}
-                    </label>
-                  ))}
+                  {MEALS.map(m => {
+                    const active = form.meals.includes(m);
+                    return (
+                      <button
+                        type="button"
+                        key={m}
+                        className={`${styles.mealChip} ${active ? styles.mealChipOn : ''}`}
+                        onClick={() => toggleMeal(m)}
+                        aria-pressed={active}
+                      >
+                        {m}
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
 
@@ -178,7 +202,7 @@ export default function Register() {
                 Do not include SSN, DoD ID, or medical information. Submission creates a pending request — a Food Service NCO or designated approver must authorize before a QR pass is issued.
               </p>
             </div>
-          </div>
+          </>
         )}
 
         {step === 'success' && result && (
@@ -210,18 +234,7 @@ export default function Register() {
             </div>
           </div>
         )}
-      </div>
+      </Shell>
     </>
   );
-}
-
-function Clock() {
-  const [time, setTime] = useState('');
-  useEffect(() => {
-    const tick = () => setTime(new Date().toLocaleTimeString('en-US', { hour12: false }));
-    tick();
-    const t = setInterval(tick, 1000);
-    return () => clearInterval(t);
-  }, []);
-  return <span className={styles.clock}>{time}</span>;
 }
